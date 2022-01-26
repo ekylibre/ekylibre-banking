@@ -9,7 +9,8 @@ module Banking
     VENDOR = 'nordigen'.freeze
 
     # STEP 1
-    def initialize
+    def initialize(cash_id: )
+      @cash_id = cash_id
       @country = Preference[:country]
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
       token_data = @client.generate_token()
@@ -28,12 +29,12 @@ module Banking
     #  "transaction_total_days"=>"90",
     #  "countries"=>["FR"],
     #  "logo"=>"https://cdn.nordigen.com/ais/ALLIANZ_BANQUE_AGFBFRPPXXX.png"}
-    def get_institutions(cash_id = nil)
+    def get_institutions
 
       institutions = @client.institution.get_institutions(@country)
 
-      if cash_id
-        bic = Cash.find(cash_id)&.bank_identifier_code
+      if @cash_id
+        bic = Cash.find(@cash_id)&.bank_identifier_code
         banks = institutions.select {|b| b.bic == bic } if bic.present?
         if banks.any?
           banks.first
@@ -46,47 +47,19 @@ module Banking
     end
 
     # STEP 3
-    def create_end_user_agreement(institution_id: nil, max_historical_days: 90, access_valid_for_days: 365, access_scope: @access_scope)
-      url = BASE_URL + END_USER_AGREEMENT_URL
-      params = { accept: :json, content_type: :json, authorization: "Bearer #{@access_token}" }
-      payload = { institution_id: institution_id }
-      # in options in payload
-      # max_historical_days: max_historical_days.to_s,
-      # access_valid_for_days: access_valid_for_days.to_s,
-      # access_scope: access_scope
-
-      call = RestClient.post(url, payload, headers=params)
-      response = JSON.parse(call.body).deep_symbolize_keys
-      # need to save :id from response as agrement_id
-      # ex value "8f075a9d-770b-4bfa-ba42-acc226d478b5"
-      name = "agrement_id_#{institution_id}"
-      value = response[:id]
-      Preference.set!(name, value)
-      response
-    end
-
-    # STEP 4
-    def create_requisition(cash_id: nil, institution_id: nil, reference: nil, redirect_url: nil, agreement_id: nil, user_language: nil)
+    def create_requisition(redirect_url: , institution_id:, reference_id:, max_historical_days: 90)
       # if cash_id, get institution_id and build redirect_url
-      if cash_id
-        redirect_url ||= URI.join(root_url, "/backend/cashes/#{cash_id}").to_s
-        institution = get_institutions(cash_id)
-        if institution
-          institution_id = institution.id
-        else
-          puts "No way to find BIC with cash_id #{cash_id} provide"
-        end
-      end
 
       response = @client.init_session( redirect_url: redirect_url,
                            institution_id: institution_id,
-                           reference_id: SecureRandom.uuid
+                           reference_id: reference_id,
+                           max_historical_days: max_historical_days
                          )
 
-      name = "requisition_id_#{institution_id}"
+      name = "requisition_id_cash_id_#{@cash_id}"
       value = response.id
       Preference.set!(name, value)
-      name = "requisition_link_#{institution_id}"
+      name = "requisition_link_cash_id_#{@cash_id}"
       value = response.link
       Preference.set!(name, value)
       response
@@ -98,8 +71,10 @@ module Banking
     end
 
     # STEP 5
+    # return account_uuid
     def list_accounts(requisition_id: nil)
       accounts = @client.requisition.get_requisition_by_id(requisition_id)
+      # set account_uuid in cashe for each account exist
       accounts.each do |account_uuid|
         infos = get_account_info(account_uuid)
         cash = Cash.find_by(iban: infos[:iban])
@@ -107,7 +82,11 @@ module Banking
           cash.provider = { vendor: VENDOR, data: { id: infos[:id].to_s  } } if cash.provider.blank?
           cash.save!
         end
-        # account_uuid = "41483703-f49a-4c84-8b4a-2d229e620008"
+      end
+      if @cash_id
+        cash = Cash.find_by(id: @cash_id).provider[:data]['id']
+      else
+        nil
       end
     end
 
@@ -150,7 +129,7 @@ module Banking
     #              :transactionId=>"08001202201300001-87e1fe2a8311d43ddaab9c1fdf8714d0d7dbc1f0d683e0159f9a238d271638c3",
     #              :valueDate=>"2022-01-13"}, {...}]
     #   pending=> [{...},  {...}]
-    def get_account_transactions(account_uuid:, from:, to: , premium: false)
+    def get_account_transactions(account_uuid: )
       account = @client.account(account_uuid)
       account.get_transactions()
     end

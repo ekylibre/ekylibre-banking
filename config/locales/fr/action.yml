@@ -1,0 +1,4 @@
+fra:
+  labels:
+    init_bank_transactions: "Connecter mon compte bancaire"
+    sync_bank_transactions: "Synchroniser les relevés de comptes"

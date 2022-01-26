@@ -1,0 +1,4 @@
+eng:
+  labels:
+    init_bank_transactions: "Init Bank account"
+    sync_bank_transactions: "Sync Bank transactions"
