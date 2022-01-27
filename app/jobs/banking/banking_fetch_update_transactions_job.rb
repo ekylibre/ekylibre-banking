@@ -15,7 +15,7 @@ module Banking
         puts account_uuid.inspect.green
         transactions = bank_service.get_account_transactions(account_uuid: account_uuid)
         puts transactions.inspect.red
-        bs_service = ::Banking::BankStatement.new(cash_id: cash_id)
+        bs_service = ::Banking::BankTransaction.new(cash_id: cash_id)
         bs_service.import_bank_statements(transactions: transactions)
       rescue StandardError => error
         Rails.logger.error $ERROR_INFO

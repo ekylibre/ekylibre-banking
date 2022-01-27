@@ -77,9 +77,9 @@ module Banking
       # set account_uuid in cashe for each account exist
       accounts.each do |account_uuid|
         infos = get_account_info(account_uuid)
-        cash = Cash.find_by(iban: infos[:iban])
+        cash = Cash.find_by(iban: infos.iban)
         if cash
-          cash.provider = { vendor: VENDOR, data: { id: infos[:id].to_s  } } if cash.provider.blank?
+          cash.provider = { vendor: VENDOR, data: { id: infos.id.to_s  } } if cash.provider.blank?
           cash.save!
         end
       end
