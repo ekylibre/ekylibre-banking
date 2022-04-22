@@ -9,7 +9,7 @@ module Banking
       institution = bank_service.get_institutions
       uuid = SecureRandom.uuid
       redirect_url = self.request.base_url + '/backend/cashes/' + cash_id.to_s
-      requisition = bank_service.create_requisition(redirect_url: redirect_url, institution_id: institution.id, reference_id: uuid, max_historical_days: 90)
+      requisition = bank_service.create_requisition(redirect_url: redirect_url, institution_id: institution.id, reference_id: uuid, max_historical_days: institution.transaction_total_days || 90)
       session[:requisition_id] = requisition.id
       redirect_to requisition.link
     end

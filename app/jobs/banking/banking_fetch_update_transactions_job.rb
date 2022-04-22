@@ -8,13 +8,9 @@ module Banking
 
     def perform(cash_id:, requisition_id:)
       begin
-        puts cash_id.inspect.yellow
-        puts requisition_id.inspect.yellow
         bank_service = ::Banking::Account.new(cash_id: cash_id)
         account_uuid = bank_service.list_accounts(requisition_id: requisition_id)
-        puts account_uuid.inspect.green
         transactions = bank_service.get_account_transactions(account_uuid: account_uuid)
-        puts transactions.inspect.red
         bs_service = ::Banking::BankTransaction.new(cash_id: cash_id)
         bs_service.import_bank_statements(transactions: transactions)
       rescue StandardError => error

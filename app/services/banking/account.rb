@@ -33,7 +33,7 @@ module Banking
 
       institutions = @client.institution.get_institutions(@country)
 
-      if @cash_id
+      if @cash_id && Cash.find(@cash_id)
         bic = Cash.find(@cash_id)&.bank_identifier_code
         banks = institutions.select {|b| b.bic == bic } if bic.present?
         if banks.any?
@@ -73,9 +73,9 @@ module Banking
     # STEP 5
     # return account_uuid
     def list_accounts(requisition_id: nil)
-      accounts = @client.requisition.get_requisition_by_id(requisition_id)
+      call = @client.requisition.get_requisition_by_id(requisition_id)
       # set account_uuid in cashe for each account exist
-      accounts.each do |account_uuid|
+      call.accounts.each do |account_uuid|
         infos = get_account_info(account_uuid)
         cash = Cash.find_by(iban: infos.iban)
         if cash
