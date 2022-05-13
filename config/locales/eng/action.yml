@@ -1,4 +1,8 @@
 eng:
+  actions:
+    banking/transactions:
+      index: 'Banks connexions'
+      new: 'New bank connexion'
   labels:
     init_bank_transactions: "Init Bank account"
     sync_bank_transactions: "Sync Bank transactions"

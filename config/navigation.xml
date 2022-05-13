@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigation>
+  <part name="accountancy">
+    <group name="cash">
+      <item name="cashes">
+        <page to="banking/transactions#index"/>
+      	<page to="banking/transactions#new"/>
+        <page to="banking/transactions#build_requisition"/>
+      </item>
+    </group>
+  </part>
+</navigation>

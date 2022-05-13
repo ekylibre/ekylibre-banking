@@ -1,4 +1,5 @@
 require 'ekylibre-banking/engine'
+require 'ekylibre-banking/ext_navigation'
 
 module EkylibreBanking
   def self.root

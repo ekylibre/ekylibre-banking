@@ -9,8 +9,8 @@ module Banking
     VENDOR = 'nordigen'.freeze
 
     # STEP 1
-    def initialize(cash_id: )
-      @cash_id = cash_id
+    def initialize(cash_id: nil)
+      @cash_id = cash_id if cash_id
       @country = Preference[:country]
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
       token_data = @client.generate_token()
@@ -29,10 +29,8 @@ module Banking
     #  "transaction_total_days"=>"90",
     #  "countries"=>["FR"],
     #  "logo"=>"https://cdn.nordigen.com/ais/ALLIANZ_BANQUE_AGFBFRPPXXX.png"}
-    def get_institutions
-
+    def get_institution
       institutions = @client.institution.get_institutions(@country)
-
       if @cash_id && Cash.find(@cash_id)
         bic = Cash.find(@cash_id)&.bank_identifier_code
         banks = institutions.select {|b| b.bic == bic } if bic.present?
@@ -42,8 +40,12 @@ module Banking
           nil
         end
       else
-        institutions
+        nil
       end
+    end
+
+    def get_institutions
+      institutions = @client.institution.get_institutions(@country)
     end
 
     # STEP 3
