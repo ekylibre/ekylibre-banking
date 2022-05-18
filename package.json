@@ -1,0 +1,11 @@
+{
+  "name": "ekylibre-banking",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@gitlab.com:ekylibre/ekylibre-banking.git",
+  "author": "Thibaut <tgorioux@ekylibre.com>",
+  "license": "MIT",
+  "dependencies": {
+    "nordigen-bank-ui": "^1.3.3"
+  }
+}
