@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'nordigen-ruby'
 
 module Banking
   class Account
