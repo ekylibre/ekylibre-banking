@@ -12,5 +12,12 @@ module EkylibreBanking
       Ekylibre::View::Addon.add(:main_toolbar, 'backend/cashes/sync_bank_account_toolbar', to: 'backend/cashes#show')
     end
 
+    initializer :ekylibre_banking_import_javascript do
+      tmp_file = Rails.root.join('tmp', 'plugins', 'javascript-addons', 'plugins.js.coffee')
+      tmp_file.open('a') do |f|
+        import = '#= require banking/all'
+        f.puts(import) unless tmp_file.open('r').read.include?(import)
+      end
+    end
   end
 end
