@@ -33,12 +33,18 @@
       const institutions = Array.from(
         document.querySelectorAll(".ob-list-institution > a")
       );
-      console.log(institutions);
       institutions.forEach((institution) => {
         institution.addEventListener("click", (e) => {
           e.preventDefault();
+          const params = new URLSearchParams(window.location.search);
+          let cashId;
+          if (params.has("cash_id")) {
+            cashId = params.get("cash_id");
+          } else {
+            console.error('Couldn\'t find cash_id in parameters')
+          }
           const aspspId = e.currentTarget.getAttribute("data-institution");
-          window.location.href = `/banking/transactions/${aspspId}/build_requisition`;
+          window.location.href = `/banking/transactions/${cashId}/build_requisition?institution_id=${aspspId}`;
         });
       });
     });
