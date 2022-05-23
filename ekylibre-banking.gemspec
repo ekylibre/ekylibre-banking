@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://www.ekylibre.com'
   spec.license = 'AGPL-3.0-only'
 
-  spec.files = Dir.glob(%w[{app,config,db,lib}/**/* LICENSE.md])
+  spec.files = Dir.glob(%w[{app,config,db,lib}/**/* vendor/assets/*/*/*/*/* LICENSE.md])
 
   spec.add_dependency 'securerandom'
   spec.add_dependency 'nordigen-ruby'
