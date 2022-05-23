@@ -19,5 +19,14 @@ module EkylibreBanking
         f.puts(import) unless tmp_file.open('r').read.include?(import)
       end
     end
+
+    initializer :ekylibre_banking_import_stylesheets do
+      tmp_file = Rails.root.join('tmp', 'plugins', 'theme-addons', 'themes', 'tekyla', 'plugins.scss')
+      tmp_file.open('a') do |f|
+        import = '@import "banking/all.scss";'
+        f.puts(import) unless tmp_file.open('r').read.include?(import)
+      end
+    end
+
   end
 end
