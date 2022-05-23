@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   namespace :banking do
-    resources :transactions, only: %i[new] do
+    resources :transactions, only: :new do
       member do
         get :build_requisition
         get :sync_account
