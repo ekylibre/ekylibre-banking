@@ -57,5 +57,18 @@ module Banking
       account = @client.account(account_uuid)
       account.get_transactions()
     end
+
+    def get_requisition_by_id(requisition_id)
+      @client.requisition.get_requisition_by_id(requisition_id)
+    end
+  
+    def get_requisition_accounts(requisition_id)
+      requisition = get_requisition_by_id(requisition_id)
+      requisition.accounts.map do |account_uuid|
+        get_account_info(account_uuid)
+      end
+    end
   end
+
+
 end
