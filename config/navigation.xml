@@ -3,9 +3,7 @@
   <part name="accountancy">
     <group name="cash">
       <item name="cashes">
-        <page to="banking/transactions#index"/>
-      	<page to="banking/transactions#new"/>
-        <page to="banking/transactions#build_requisition"/>
+      	<page to="banking/cash_synchronizations#new"/>
       </item>
     </group>
   </part>

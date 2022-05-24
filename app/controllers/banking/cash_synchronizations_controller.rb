@@ -1,25 +1,20 @@
 require 'securerandom'
 
 module Banking
-  class TransactionsController < Backend::BaseController
-    include Rails.application.routes.url_helpers
-
-    def index
-    end
-
+  class CashSynchronizationsController < Backend::BaseController
     def new
       cash = Cash.find_by_id(params[:cash_id])
       nordigen_service = Banking::NordigenService.instance
       if cash && (bic = cash.bank_identifier_code)
         institution = nordigen_service.get_institution_by_bic(bic)
-        redirect_to(build_requisition_banking_transaction_path(cash), institution_id: institution.id) if institution
+        redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id), institution_id: institution.id) if institution
       end
       institutions = nordigen_service.get_institutions
       @list = institutions.collect {|el| el.marshal_dump }.to_json
     end
 
     def build_requisition
-      cash_id = params[:id]
+      cash_id = params[:cash_id]
       nordingen_service = Banking::NordigenService.instance
       institution = nordingen_service.get_institution_by_id(params[:institution_id])
       uuid = SecureRandom.uuid
@@ -40,8 +35,8 @@ module Banking
       redirect_to requisition.link
     end
 
-    def sync_account
-      cash_id = params[:id]
+    def perform
+      cash_id = params[:cash_id]
       if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value).nil?
         raise StandardError.new("Requisition ID is not found. Please complete authorization with your bank")
       end

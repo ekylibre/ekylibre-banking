@@ -1,2 +1,2 @@
-= tool_to(:init_bank_transactions.tl, { controller: '/banking/transactions', action: :new, cash_id: resource.id })
-= tool_to(:sync_bank_transactions.tl, { controller: '/banking/transactions', action: :sync_account, cash_id: resource.id })
+= tool_to(:init_bank_transactions.tl, new_banking_cash_synchronization_path(cash_id: resource.id))
+= tool_to(:sync_bank_transactions.tl, perform_banking_cash_synchronization_path(cash_id: resource.id))

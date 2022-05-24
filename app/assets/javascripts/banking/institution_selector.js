@@ -44,7 +44,7 @@
             console.error('Couldn\'t find cash_id in parameters')
           }
           const aspspId = e.currentTarget.getAttribute("data-institution");
-          window.location.href = `/banking/transactions/${cashId}/build_requisition?institution_id=${aspspId}`;
+          window.location.href = `/banking/cash_synchronization/build_requisition?cash_id=${cashId}&institution_id=${aspspId}`;
         });
       });
     });

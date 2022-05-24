@@ -10,12 +10,9 @@ Rails.application.routes.draw do
   end
 
   namespace :banking do
-    resources :transactions, only: :new do
-      member do
-        get :build_requisition
-        get :sync_account
-      end
+    resource :cash_synchronization, only: :new do
+      get :build_requisition
+      get :perform
     end
   end
-
 end

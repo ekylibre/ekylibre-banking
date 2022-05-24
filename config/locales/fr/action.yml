@@ -1,7 +1,6 @@
 fra:
   actions:
-    banking/transactions:
-      index: 'Connections bancaires'
+    banking/cash_synchronizations:
       new: 'Nouvelle connection Bancaire'
   labels:
     init_bank_transactions: "Connecter mon compte bancaire"
