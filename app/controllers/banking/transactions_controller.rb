@@ -28,12 +28,11 @@ module Banking
                                                          institution_id: institution.id,
                                                          reference_id: uuid,
                                                          max_historical_days: institution.transaction_total_days || 90)
-      binding.pry
       name = "requisition_id_cash_id_#{cash_id}"
       value = requisition.id
       Preference.set!(name, value)
 
-      # why should we stroe the link url ? it seems to be never used.
+      # why should we store the link url ? it seems to be never used.
 
       # name = "requisition_link_cash_id_#{cash_id}"
       # value = requisition.link
@@ -42,12 +41,12 @@ module Banking
     end
 
     def sync_account
-      cash_id = params[:cash_id]
-      if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value)
-        raise "Requisition ID is not found. Please complete authorization with your bank"
+      cash_id = params[:id]
+      if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value).nil?
+        raise StandardError.new("Requisition ID is not found. Please complete authorization with your bank")
       end
       ::Banking::BankingFetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id)
-      redirect_to controller: '/backend/cashes', action: :show, id: cash_id
+      redirect_to backend_cash_path(cash_id)
     end
 
   end
