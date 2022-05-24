@@ -1,3 +1,12 @@
+/**Custom version of nordigen ui yarn pacakge
+ * 
+ * - fix for obInstitutionSbModalContent selector
+ * - move all fonction and const inside institutionSelector function
+ * - handle turbolinks 
+ * - change labels
+*/
+
+
 /**
  *
  * @param {Object} institutions
@@ -64,7 +73,7 @@ function institutionSelector(institutions, targetNode, config = {}) {
 
     // Set attributes
     search.href = "#";
-    input.setAttribute("placeholder", "Search...");
+    input.setAttribute("placeholder", "Rechercher...");
     input.setAttribute("onkeyup", "_institutionSbSearchAspsp(config)");
 
     searchBox.appendChild(input);
@@ -137,7 +146,7 @@ function institutionSelector(institutions, targetNode, config = {}) {
   }
 
   function createCountryListView(body, institutionLogos, config) {
-    _changeHeading("Select your country");
+    _changeHeading("Selectionner votre pays");
     const arrow = _addBackArrow({ visible: false });
     const countries = _getAllUniqueCountries(institutionLogos);
     const institutionContainer = _createInstitutionContainer();
@@ -330,7 +339,7 @@ function institutionSelector(institutions, targetNode, config = {}) {
     });
   };
 
-  const _changeHeading = (text = "Select your bank") => {
+  const _changeHeading = (text = "Selectionner votre bank") => {
     document.querySelector(".institution-modal-header h2").innerHTML = text;
   };
 
@@ -369,7 +378,7 @@ function institutionSelector(institutions, targetNode, config = {}) {
 
     const link = document.createElement("a");
     link.href = "#";
-    link.innerText = "Back";
+    link.innerText = "Retour";
     arrowDiv.appendChild(link);
 
     if (!visible) arrowDiv.style.display = "none";
