@@ -38,12 +38,15 @@ module Banking
       requisition_id = "44305d8a-42fd-4b19-9c2d-c0bae0479cb5"
       Preference.set!("requisition_id_cash_id_#{cash.id}", requisition_id)
 
-      ::Banking::BankingFetchUpdateTransactionsJob = MiniTest::Mock.new
-      ::Banking::BankingFetchUpdateTransactionsJob.expect(:perform_later, nil, [{cash_id: cash.id.to_s , requisition_id: requisition_id}])
+      mock = MiniTest::Mock.new
+      mock.expect(:perform_later, nil, [{cash_id: cash.id.to_s , requisition_id: requisition_id}])
 
-      get :perform, params: { cash_id: cash.id }
-      ::Banking::BankingFetchUpdateTransactionsJob.verify
+      ::Banking::BankingFetchUpdateTransactionsJob.stub :perform_later,  -> (arg) { mock.perform_later arg } do 
+        get :perform, params: { cash_id: cash.id }
+      end
+      assert_mock mock
       assert_redirected_to backend_cash_path(cash), 'Redirects to cash show view'
+      
     end
 
   end
