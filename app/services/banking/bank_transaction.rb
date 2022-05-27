@@ -2,8 +2,6 @@
 
 module Banking
   class BankTransaction
-    VENDOR = 'nordigen'.freeze
-
     def initialize(cash_id: )
       @cash = Cash.find(cash_id)
     end
@@ -34,10 +32,10 @@ module Banking
           bk.items.create!(
             initiated_on: Date.parse(item.bookingDate),
             name: item.remittanceInformationUnstructured,
-            #memo: item.remittanceInformationUnstructuredArray,
+            memo: item.remittanceInformationUnstructuredArray,
             balance: item.transactionAmount.amount.to_f,
             transaction_number: item.transactionId,
-            transfered_on: Date.parse(item.bookingDate)
+            transfered_on: Date.parse(item.bookingDate || item.valueDate)
           )
         end
       end
