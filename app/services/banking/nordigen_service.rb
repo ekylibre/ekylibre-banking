@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'nordigen-ruby'
 
 module Banking
@@ -12,14 +13,6 @@ module Banking
       token_data = @client.generate_token()
     end
 
-    # return institutions (banks) for a country (fr, gb...)
-    # return an Array of Hash
-    # {"id"=>"ALLIANZ_BANQUE_AGFBFRPPXXX",
-    #  "name"=>"Allianz Banque",
-    #  "bic"=>"AGFBFRPPXXX",
-    #  "transaction_total_days"=>"90",
-    #  "countries"=>["FR"],
-    #  "logo"=>"https://cdn.nordigen.com/ais/ALLIANZ_BANQUE_AGFBFRPPXXX.png"}
     def get_institution_by_bic(bic)
       get_institutions.select {|b| b.bic == bic }.first
     end
@@ -28,6 +21,9 @@ module Banking
       @client.institution.get_institution_by_id(id)
     end
 
+    # @param [String] country country name abbreviated
+    # @return [Array<OpenStruct>] institutions of the country
+    # institution attr. : :id, :name, :bic, :transaction_total_days, :countries logo
     def get_institutions(country = Preference[:country])
       @client.institution.get_institutions(country)
     end
@@ -45,7 +41,9 @@ module Banking
       account.get_metadata()
     end
 
-    # TRANSACTIONS
+    # @param [Hash] opts 
+    # @option opts [String] :account_uuid account id
+    # @return [OpenStructS] account transactions
     # transactions=>
     #   booked=> [{:bookingDate=>"2022-01-13",
     #              :remittanceInformationUnstructuredArray=>["PAIEMENT CB  1101 BORDEAUX CEDE", "CCI BDX ARCACHO  CARTE 27571395"],
