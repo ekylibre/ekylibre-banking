@@ -4,6 +4,6 @@ fra:
       new: 'Nouvelle connection Bancaire'
   labels:
     account_sync_authorization_required: "Vous devez autoriser la synchronisation en connectant votre compte bancaire"
-    iban_should_be_provided: "Pour synchroniser, l'IBAN du compte doit être renseigné"
+    iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné"
     init_bank_transactions: "Connecter mon compte bancaire"
     sync_bank_transactions: "Synchroniser les relevés de compte"

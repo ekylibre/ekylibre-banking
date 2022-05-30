@@ -25,8 +25,8 @@ module Banking
                                                          max_historical_days: institution.transaction_total_days || 90)
       name = "requisition_id_cash_id_#{cash_id}"
       value = requisition.id
-      Preference.set!(name, value)
-
+      preference = Preference.set!(name, value)
+      ::Banking::DestroyRequisitonIdJob.set(wait: 90.days).perform_later(preference.id)
       # why should we store the link url ? it seems to be never used.
 
       # name = "requisition_link_cash_id_#{cash_id}"
@@ -38,12 +38,13 @@ module Banking
     def perform
       cash_id = params[:cash_id]
       cash = Cash.find(cash_id)
-      unless synchronizable? 
+      unless cash.synchronizable? 
         notify_warning(:iban_should_be_provided.tl)
         redirect_to backend_cash_path(cash_id)
+        return
       end
 
-      if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value).nil?
+      if (requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{cash_id}")&.value).nil?
         notify_warning(:account_sync_authorization_required.tl)
       else
         ::Banking::BankingFetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id)
