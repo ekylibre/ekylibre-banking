@@ -339,7 +339,7 @@ function institutionSelector(institutions, targetNode, config = {}) {
     });
   };
 
-  const _changeHeading = (text = "Selectionner votre bank") => {
+  const _changeHeading = (text = "Selectionner votre banque") => {
     document.querySelector(".institution-modal-header h2").innerHTML = text;
   };
 
