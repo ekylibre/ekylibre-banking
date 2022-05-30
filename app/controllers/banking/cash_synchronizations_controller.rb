@@ -37,10 +37,17 @@ module Banking
 
     def perform
       cash_id = params[:cash_id]
-      if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value).nil?
-        raise StandardError.new("Requisition ID is not found. Please complete authorization with your bank")
+      cash = Cash.find(cash_id)
+      unless synchronizable? 
+        notify_warning(:iban_should_be_provided.tl)
+        redirect_to backend_cash_path(cash_id)
       end
-      ::Banking::BankingFetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id)
+
+      if (requisition_id = Preference.get("requisition_id_cash_id_#{cash_id}").value).nil?
+        notify_warning(:account_sync_authorization_required.tl)
+      else
+        ::Banking::BankingFetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id)
+      end
       redirect_to backend_cash_path(cash_id)
     end
 
