@@ -1,4 +1,9 @@
 eng:
+  actions:
+    banking/cash_synchronizations:
+      new: 'New bank connexion'
   labels:
-    init_bank_transactions: "Init Bank account"
-    sync_bank_transactions: "Sync Bank transactions"
+    account_sync_authorization_required: "Please complete authorization with your bank first"
+    iban_should_be_provided: "To synchronize, account IBAN must be provided"
+    init_bank_transactions: "Init bank account"
+    sync_bank_transactions: "Sync bank transactions"

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigation>
+  <part name="accountancy">
+    <group name="cash">
+      <item name="cashes">
+      	<page to="banking/cash_synchronizations#new"/>
+      </item>
+    </group>
+  </part>
+</navigation>
