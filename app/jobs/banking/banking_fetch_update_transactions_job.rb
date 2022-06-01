@@ -2,17 +2,19 @@
 module Banking
   class BankingFetchUpdateTransactionsJob < ActiveJob::Base
     queue_as :default
-    include Rails.application.routes.url_helpers
-
     VENDOR = 'nordigen'
 
-    def perform(cash_id:, requisition_id:)
+    def perform(cash_id:, requisition_id:, nordigen_service: ::Banking::NordigenService.instance)
       begin
-        bank_service = ::Banking::Account.new(cash_id: cash_id)
-        account_uuid = bank_service.list_accounts(requisition_id: requisition_id)
-        transactions = bank_service.get_account_transactions(account_uuid: account_uuid)
-        bs_service = ::Banking::BankTransaction.new(cash_id: cash_id)
-        bs_service.import_bank_statements(transactions: transactions)
+        accounts = nordigen_service.get_requisition_accounts(requisition_id)
+        update_cash_provider(accounts)
+
+        account_uuid = Cash.find_by(id: cash_id).provider_data[:id]
+        if account_uuid.present?
+          transactions = nordigen_service.get_account_transactions(account_uuid: account_uuid)
+          bs_service = ::Banking::BankTransaction.new(cash_id: cash_id)
+          bs_service.import_bank_statements(transactions: transactions)
+        end
       rescue StandardError => error
         Rails.logger.error $ERROR_INFO
         Rails.logger.error $ERROR_INFO.backtrace.join("\n")
@@ -20,18 +22,13 @@ module Banking
       end
     end
 
-    private
-
-      def error_notification_params(error)
-        {
-          message: 'error_during_banking_api_call',
-          level: :error,
-          target_type: '',
-          target_url: '',
-          interpolations: {
-            error_message: error
-          }
-        }
+    def update_cash_provider(accounts)
+      accounts.each do |account|
+        if cash = Cash.find_by(iban: account.iban)
+          cash.provider = { vendor: VENDOR, data: { id: account.id.to_s  } } if cash.provider.blank?
+          cash.save!
+        end
       end
+    end
   end
 end

@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     ekylibre-banking (0.1.0)
-      nordigen-ruby
-      securerandom
+      nordigen-ruby (~> 1.0.0)
+      securerandom (~> 0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -34,7 +34,7 @@ GEM
       faraday (~> 1.8.0)
       faraday_middleware (~> 1.2.0)
     ruby2_keywords (0.0.5)
-    securerandom (0.1.1)
+    securerandom (0.2.0)
 
 PLATFORMS
   x86_64-linux
@@ -43,4 +43,4 @@ DEPENDENCIES
   ekylibre-banking!
 
 BUNDLED WITH
-   2.2.24
+   2.2.26
