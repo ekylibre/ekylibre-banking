@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Banking
   class DestroyRequisitonIdJob < ActiveJob::Base
     queue_as :default

@@ -7,10 +7,10 @@ module Banking
     include Singleton
     SECRET_ID = ENV['NORDIGEN_SECRET_ID']
     SECRET_KEY = ENV['NORDIGEN_SECRET_KEY']
-    
+
     def initialize
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
-      token_data = @client.generate_token()
+      token_data = @client.generate_token
     end
 
     def get_institution_by_bic(bic)
@@ -28,7 +28,7 @@ module Banking
       @client.institution.get_institutions(country)
     end
 
-    def create_requisition(redirect_url: , institution_id:, reference_id:, max_historical_days: 90)
+    def create_requisition(redirect_url:, institution_id:, reference_id:, max_historical_days: 90)
       @client.init_session( redirect_url: redirect_url,
                             institution_id: institution_id,
                             reference_id: reference_id,
@@ -38,10 +38,10 @@ module Banking
     # :id, :iban
     def get_account_info(account_uuid)
       account = @client.account(account_uuid)
-      account.get_metadata()
+      account.get_metadata
     end
 
-    # @param [Hash] opts 
+    # @param [Hash] opts
     # @option opts [String] :account_uuid account id
     # @return [OpenStructS] account transactions
     # transactions=>
@@ -53,13 +53,13 @@ module Banking
     #   pending=> [{...},  {...}]
     def get_account_transactions(account_uuid: )
       account = @client.account(account_uuid)
-      account.get_transactions()
+      account.get_transactions
     end
 
     def get_requisition_by_id(requisition_id)
       @client.requisition.get_requisition_by_id(requisition_id)
     end
-  
+
     def get_requisition_accounts(requisition_id)
       requisition = get_requisition_by_id(requisition_id)
       requisition.accounts.map do |account_uuid|
@@ -67,6 +67,5 @@ module Banking
       end
     end
   end
-
 
 end

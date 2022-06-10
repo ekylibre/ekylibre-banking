@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Banking
   class BankingFetchUpdateTransactionsJob < ActiveJob::Base
     queue_as :default
