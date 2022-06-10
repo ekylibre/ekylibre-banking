@@ -15,8 +15,10 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob(%w[{app,config,db,lib}/**/* vendor/assets/*/*/*/*/* LICENSE.md])
 
-  spec.add_dependency 'securerandom', "~> 0.2.0"
-  spec.add_dependency 'nordigen-ruby', "~> 1.0.0"
+  spec.add_dependency 'nordigen-ruby', '~> 1.0.0'
+  spec.add_dependency 'securerandom', '~> 0.2.0'
+
+  spec.add_development_dependency 'rubocop', '1.11.0'
 
   spec.require_path = ['lib']
 end

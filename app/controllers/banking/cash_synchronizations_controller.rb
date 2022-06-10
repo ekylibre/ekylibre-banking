@@ -10,7 +10,7 @@ module Banking
         redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id), institution_id: institution.id) if institution
       end
       institutions = nordigen_service.get_institutions
-      @list = institutions.collect {|el| el.marshal_dump }.to_json
+      @list = institutions.collect(&:marshal_dump).to_json
     end
 
     def build_requisition
@@ -38,7 +38,7 @@ module Banking
     def perform
       cash_id = params[:cash_id]
       cash = Cash.find(cash_id)
-      unless cash.synchronizable? 
+      unless cash.synchronizable?
         notify_warning(:iban_should_be_provided.tl)
         redirect_to backend_cash_path(cash_id)
         return
