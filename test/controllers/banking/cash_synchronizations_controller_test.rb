@@ -46,7 +46,6 @@ module Banking
       end
       assert_mock mock
       assert_redirected_to backend_cash_path(cash), 'Redirects to cash show view'
-
     end
 
   end

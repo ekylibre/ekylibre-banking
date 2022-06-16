@@ -7,3 +7,8 @@ fra:
     iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné"
     init_bank_transactions: "Connecter mon compte bancaire"
     sync_bank_transactions: "Synchroniser les relevés de compte"
+    nordigen:
+      requisition_created: "La réquisition a bien été crée"
+      account_linked: "Le compte a bien été connecté"
+      access_expired: "L'accés au compte a expiré"
+      unedergoing_authentication: "L'authentification auprès du service bancaire a échoué"

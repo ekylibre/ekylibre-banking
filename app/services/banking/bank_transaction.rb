@@ -34,10 +34,10 @@ module Banking
       def create_bank_statement_item(bank_statement, item)
         unless BankStatementItem.find_by(transaction_number: item.transactionId)
           name = if item.remittanceInformationUnstructuredArray&.any?
-            item.remittanceInformationUnstructuredArray.first
-          else
-            item.remittanceInformationUnstructured
-          end
+                   item.remittanceInformationUnstructuredArray.first
+                 else
+                   item.remittanceInformationUnstructured
+                 end
 
           bank_statement.items.create!(
             initiated_on: Date.parse(item.bookingDate),

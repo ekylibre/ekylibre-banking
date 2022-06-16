@@ -7,3 +7,8 @@ eng:
     iban_should_be_provided: "To synchronize, account IBAN must be provided"
     init_bank_transactions: "Init bank account"
     sync_bank_transactions: "Sync bank transactions"
+    nordigen:
+      requisition_created: "Requisition has been successfully created"
+      account_linked: "Account has been successfully linked"
+      access_expired: "Access to account has expired as set in End User Agreement"
+      unedergoing_authentication: "End-user is redirected to the financial institution for authentication"
