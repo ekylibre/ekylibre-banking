@@ -1,3 +1,6 @@
-- if Preference.find_by(name: "requisition_id_cash_id_#{resource.id}")&.value.nil?
+- requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{resource.id}")&.value
+- requisition = Banking::NordigenService.instance.get_requisition_by_id(requisition_id) if requisition_id.present?
+
+- unless requisition.present? && requisition.linked?
   = tool_to(:init_bank_transactions.tl, new_banking_cash_synchronization_path(cash_id: resource.id))
 = tool_to(:sync_bank_transactions.tl, perform_banking_cash_synchronization_path(cash_id: resource.id))
