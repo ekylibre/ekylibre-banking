@@ -5,21 +5,45 @@ module Banking
     queue_as :default
     VENDOR = 'nordigen'
 
-    def perform(cash_id:, requisition_id:, nordigen_service: ::Banking::NordigenService.instance)
+    def perform(cash_id:, requisition_id:, nordigen_service: ::Banking::NordigenService.instance, user:)
       begin
         cash = cash.find(cash_id)
         accounts = nordigen_service.get_requisition_accounts(requisition_id)
+        requisition = nordigen_service.get_requisition(requisition_id)
         check_iban(cash, accounts)
         update_cash_provider(cash, accounts)
         import_bank_statements(cash.reload, nordigen_service)
+        user.notifications.create!(success_notification_params(cash))
       rescue StandardError => error
         Rails.logger.error $ERROR_INFO
         Rails.logger.error $ERROR_INFO.backtrace.join("\n")
         ExceptionNotifier.notify_exception($ERROR_INFO, data: { message: error })
+        ElasticAPM.report(error)
+        user.notifications.create!(error_generation_notification_params(error))
       end
     end
 
     private
+
+      def error_notification_params(error)
+        {
+          message: :error_during_transactions_synchronization,
+          level: :error,
+          interpolations: {
+            error_message: error
+          }
+        }
+      end
+
+      def success_notification_params(cash)
+        {
+          message: :cash_transactions_synchronized,
+          level: :success
+          interpolations: {
+            cash_name: cash.name
+          }
+        }
+      end
 
       # Multiple account can be selected for synchronization, so we need to check that at 
       # least one account matches cash account (using iban)

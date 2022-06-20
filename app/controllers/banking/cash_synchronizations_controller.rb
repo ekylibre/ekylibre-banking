@@ -47,7 +47,7 @@ module Banking
       if (requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{cash_id}")&.value).nil?
         notify_warning(:account_sync_authorization_required.tl)
       else
-        ::Banking::FetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id)
+        ::Banking::FetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id, user: current_user)
       end
       redirect_to backend_cash_path(cash_id)
     end
