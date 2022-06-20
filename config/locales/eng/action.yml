@@ -7,6 +7,9 @@ eng:
     iban_should_be_provided: "To synchronize, account IBAN must be provided"
     init_bank_transactions: "Init bank account"
     sync_bank_transactions: "Sync bank transactions"
+    none_account_iban_matches_cash_iban: "None of selected account for synchronization matches the current account (#{cash_name}) iban"
+    cash_transactions_synchronized: "Account statements have been synchronized"
+    error_during_transactions_synchronization: "Error during account statement synchronization: #{message}"
     nordigen:
       requisition_created: "Requisition has been successfully created"
       account_linked: "Account has been successfully linked"

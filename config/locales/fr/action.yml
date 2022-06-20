@@ -7,6 +7,9 @@ fra:
     iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné"
     init_bank_transactions: "Connecter mon compte bancaire"
     sync_bank_transactions: "Synchroniser les relevés de compte"
+    none_account_iban_matches_cash_iban: "Aucun des comptes selectionnés pour la synchronisation ne correspond à l'iban du compte #{cash_name}"
+    cash_transactions_synchronized: "Les relevés de compte bancaire ont bien été synchronisés"
+    error_during_transactions_synchronization: "Une erreur est survenue lors de la synchronisation des relevés de compte: #{message}"
     nordigen:
       requisition_created: "La réquisition a bien été crée"
       account_linked: "Le compte a bien été connecté"

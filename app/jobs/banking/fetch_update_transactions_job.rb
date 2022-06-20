@@ -29,7 +29,7 @@ module Banking
           message: :error_during_transactions_synchronization,
           level: :error,
           interpolations: {
-            error_message: error
+            message: error
           }
         }
       end
@@ -48,7 +48,7 @@ module Banking
       # least one account matches cash account (using iban)
       def check_iban(cash, accounts)
         unless accounts.map(&:iban).include?(cash.iban)
-          raise StandardError.new(:none_account_iban_match_cash_iban.tl(iban: cash.iban))
+          raise StandardError.new(:none_account_iban_matches_cash_iban.tl(cash_name: cash.name))
         end
       end
 
