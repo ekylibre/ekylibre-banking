@@ -7,9 +7,8 @@ module Banking
 
     def perform(cash_id:, requisition_id:, nordigen_service: ::Banking::NordigenService.instance, user:)
       begin
-        cash = cash.find(cash_id)
+        cash = Cash.find(cash_id)
         accounts = nordigen_service.get_requisition_accounts(requisition_id)
-        requisition = nordigen_service.get_requisition(requisition_id)
         check_iban(cash, accounts)
         update_cash_provider(cash, accounts)
         import_bank_statements(cash.reload, nordigen_service)
@@ -19,7 +18,7 @@ module Banking
         Rails.logger.error $ERROR_INFO.backtrace.join("\n")
         ExceptionNotifier.notify_exception($ERROR_INFO, data: { message: error })
         ElasticAPM.report(error)
-        user.notifications.create!(error_generation_notification_params(error))
+        user.notifications.create!(error_notification_params(error))
       end
     end
 
@@ -38,7 +37,7 @@ module Banking
       def success_notification_params(cash)
         {
           message: :cash_transactions_synchronized,
-          level: :success
+          level: :success,
           interpolations: {
             cash_name: cash.name
           }
@@ -48,7 +47,7 @@ module Banking
       # Multiple account can be selected for synchronization, so we need to check that at 
       # least one account matches cash account (using iban)
       def check_iban(cash, accounts)
-        unless accounts.map(&:iban).include(cash.iban)
+        unless accounts.map(&:iban).include?(cash.iban)
           raise StandardError.new(:none_account_iban_match_cash_iban.tl(iban: cash.iban))
         end
       end

@@ -2,7 +2,7 @@ require 'test_helper'
 require_relative '../../test_helper'
 
 module Banking
-  class BankingFetchUpdateTransactionsJobTest < Ekylibre::Testing::ApplicationControllerTestCase::WithFixtures
+  class FetchUpdateTransactionsJobTest < Ekylibre::Testing::ApplicationControllerTestCase::WithFixtures
     setup do
       iban = 'FR7430003000404656433924D84'
       id = 1
@@ -12,12 +12,13 @@ module Banking
       @nordigen_service = Minitest::Mock.new
       @nordigen_service.expect(:get_requisition_accounts, [OpenStruct.new(iban: iban, id: id)], ['requisition_id'])
       @nordigen_service.expect(:get_account_transactions, [], [{ account_uuid: '1' }])
+      @user = User.first
     end
 
     test '#perform' do
-      BankingFetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id',
-nordigen_service: @nordigen_service )
-      assert_equal({ data: { 'id'=> '1' }, vendor: 'nordigen' }, @cash.reload.provider)
+      FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id',
+nordigen_service: @nordigen_service, user: @user )
+      assert_equal({ data: { 'id'=> '1', "name"=>"account" }, vendor: 'nordigen' }, @cash.reload.provider)
       assert_mock(@nordigen_service)
     end
   end
