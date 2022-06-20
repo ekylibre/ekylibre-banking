@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Banking
-  class BankingFetchUpdateTransactionsJob < ActiveJob::Base
+  class FetchUpdateTransactionsJob < ActiveJob::Base
     queue_as :default
     VENDOR = 'nordigen'
 
@@ -25,7 +25,8 @@ module Banking
 
     def update_cash_provider(accounts)
       accounts.each do |account|
-        if cash = Cash.find_by(iban: account.iban)
+        cash = Cash.find_by(iban: account.iban)
+        if cash
           cash.provider = { vendor: VENDOR, data: { id: account.id.to_s  } } if cash.provider.blank?
           cash.save!
         end
