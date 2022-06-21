@@ -9,7 +9,7 @@ module Nordigen
       'GA' => :granting_access,
       'SA' => :selecting_accounts,
       'GC' => :giving_consent
-    }
+    }.freeze
 
     def human_status
       "nordigen.#{STATUS_DESCRIPTION[status]}".tl

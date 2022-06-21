@@ -44,7 +44,7 @@ module Banking
         }
       end
 
-      # Multiple account can be selected for synchronization, so we need to check that at 
+      # Multiple account can be selected for synchronization, so we need to check that at
       # least one account matches cash account (using iban)
       def check_iban(cash, accounts)
         unless accounts.map(&:iban).include?(cash.iban)
@@ -69,9 +69,9 @@ module Banking
       end
 
       def provider_for_account(account)
-        { 
-          vendor: VENDOR, 
-          data: { 
+        {
+          vendor: VENDOR,
+          data: {
             id: account.id.to_s,
             name: 'account'
           }

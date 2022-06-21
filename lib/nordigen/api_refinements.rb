@@ -1,7 +1,7 @@
 module Nordigen
   module ApiRefinements
     refine Nordigen::RequisitionsApi do
-      Nordigen::ApiRefinements
+
       def create_requisition(redirect_url:, reference:, institution_id:, user_language: 'en', agreement: nil)
         Requisition.new(super)
       end

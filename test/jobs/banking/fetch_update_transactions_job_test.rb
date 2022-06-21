@@ -17,7 +17,7 @@ module Banking
 
     test '#perform' do
       FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id', nordigen_service: @nordigen_service, user: @user )
-      assert_equal({ data: { 'id'=> '1', "name"=>"account" }, vendor: 'nordigen' }, @cash.reload.provider, "It update cash provider")
+      assert_equal({ data: { 'id'=> '1', 'name'=>'account' }, vendor: 'nordigen' }, @cash.reload.provider, 'It update cash provider')
       assert_mock(@nordigen_service)
     end
 
