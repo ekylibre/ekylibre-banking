@@ -3,13 +3,14 @@ eng:
     banking/cash_synchronizations:
       new: 'New bank connexion'
   labels:
-    account_sync_authorization_required: "Please complete authorization with your bank first"
-    iban_should_be_provided: "To synchronize, account IBAN must be provided"
+    account_sync_authorization_required: "Please complete authorization with your bank first."
+    iban_should_be_provided: "To synchronize, account IBAN must be provided."
     init_bank_transactions: "Init bank account"
     sync_bank_transactions: "Sync bank transactions"
-    none_account_iban_matches_cash_iban: "None of selected account for synchronization matches the current account (#{cash_name}) iban"
-    cash_transactions_synchronized: "Account statements have been synchronized"
-    error_during_transactions_synchronization: "Error during account statement synchronization: #{message}"
+    none_account_iban_matches_cash_iban: "None of selected account for synchronization matches the current account (%{cash_name}) iban."
+    cash_transactions_synchronized: "Account statements have been synchronized."
+    error_during_transactions_synchronization: "Error during account statement synchronization : %{message}"
+    cash_transactions_synchronizing: "Account statements synchronizing."
     nordigen:
       requisition_created: "Requisition has been successfully created"
       account_linked: "Account has been successfully linked"

@@ -14,10 +14,10 @@ module Banking
         Date.parse(date).beginning_of_month.to_date
       end
 
-      transactions_by_month.each do |month, items|
+      transactions_by_month.each do |month, transaction_items|
         bank_statement = find_or_create_bank_statement(month)
-        items.each do |item|
-          create_bank_statement_item(bank_statement, item)
+        transaction_items.each do |transaction_item|
+          create_bank_statement_item(bank_statement, transaction_item)
         end
       end
     end

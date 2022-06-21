@@ -26,7 +26,7 @@ module Banking
 
       def error_notification_params(error)
         {
-          message: :error_during_transactions_synchronization,
+          message: :error_during_transactions_synchronization.tl,
           level: :error,
           interpolations: {
             message: error
@@ -36,7 +36,7 @@ module Banking
 
       def success_notification_params(cash)
         {
-          message: :cash_transactions_synchronized,
+          message: :cash_transactions_synchronized.tl,
           level: :success,
           interpolations: {
             cash_name: cash.name

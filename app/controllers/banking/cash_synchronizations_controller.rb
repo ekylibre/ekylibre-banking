@@ -48,6 +48,7 @@ module Banking
         notify_warning(:account_sync_authorization_required.tl)
       else
         ::Banking::FetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id, user: current_user)
+        notify_success(:cash_transactions_synchronizing.tl)
       end
       redirect_to backend_cash_path(cash_id)
     end
