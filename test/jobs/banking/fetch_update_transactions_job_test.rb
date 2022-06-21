@@ -16,10 +16,18 @@ module Banking
     end
 
     test '#perform' do
-      FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id',
-nordigen_service: @nordigen_service, user: @user )
-      assert_equal({ data: { 'id'=> '1', "name"=>"account" }, vendor: 'nordigen' }, @cash.reload.provider)
+      FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id', nordigen_service: @nordigen_service, user: @user )
+      assert_equal({ data: { 'id'=> '1', "name"=>"account" }, vendor: 'nordigen' }, @cash.reload.provider, "It update cash provider")
       assert_mock(@nordigen_service)
+    end
+
+    test "#perform send notification to user if iban doesn't match" do
+      @cash.update(iban: nil)
+      notification_count = @user.notifications.count
+      FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id', nordigen_service: @nordigen_service, user: @user )
+      notification = @user.notifications.order(:created_at).first
+      assert_equal('error', notification.level)
+      assert_equal(notification_count + 1, @user.notifications.count)
     end
   end
 end
