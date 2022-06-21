@@ -30,23 +30,32 @@ module Banking
       assert_not_nil Preference.get("requisition_id_cash_id_#{cash.id}").value, 'Stores the requisition_id in preference'
     end
 
-    test '#perform' do
-      assert_raises StandardError do
-        get :perform, params: { cash_id: cash.id }
-      end
-
+    test '#perform with requistition' do
       requisition_id = '44305d8a-42fd-4b19-9c2d-c0bae0479cb5'
       Preference.set!("requisition_id_cash_id_#{cash.id}", requisition_id)
 
       mock = MiniTest::Mock.new
-      mock.expect(:perform_later, nil, [{ cash_id: cash.id.to_s, requisition_id: requisition_id }])
+      mock.expect(:perform_later, nil, [{ cash_id: cash.id.to_s, requisition_id: requisition_id, user: User.first }])
 
-      ::Banking::BankingFetchUpdateTransactionsJob.stub :perform_later,  ->(arg) { mock.perform_later arg } do
+      ::Banking::FetchUpdateTransactionsJob.stub :perform_later,  ->(arg) { mock.perform_later arg } do
         get :perform, params: { cash_id: cash.id }
       end
       assert_mock mock
+      assert_equal 1, flash.keep(:notifications)['success'].count
       assert_redirected_to backend_cash_path(cash), 'Redirects to cash show view'
     end
 
+    test '#perform with account not synchronizable' do
+      cash.update(iban: nil)
+      get :perform, params: { cash_id: cash.id }
+      assert_equal 1, flash.keep(:notifications)['warning'].count
+      assert_redirected_to backend_cash_path(cash), 'Redirects to cash show view'
+    end
+
+    test '#perform without requisition' do
+      get :perform, params: { cash_id: cash.id }
+      assert_equal 1, flash.keep(:notifications)['warning'].count
+      assert_redirected_to backend_cash_path(cash), 'Redirects to cash show view'
+    end
   end
 end

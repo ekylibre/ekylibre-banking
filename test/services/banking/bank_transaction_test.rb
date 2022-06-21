@@ -15,7 +15,7 @@ module Banking
       item = bank_statement.items.first
       assert_equal('2022-05-26', item.initiated_on.to_s)
       assert_equal('PAIEMENT PAR CARTE 25/05/2022 MARCHE', item.name)
-      assert_equal(nil, item.memo)
+      assert_nil(item.memo)
       assert_equal(80.20, item.balance)
       assert_equal('40001875091_12340', item.transaction_number)
       assert_equal('2022-05-26', item.transfered_on.to_s)
