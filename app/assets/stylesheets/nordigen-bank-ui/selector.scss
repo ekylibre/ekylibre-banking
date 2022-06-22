@@ -1,0 +1,300 @@
+@mixin nordigen-selector {
+  // * {
+  //   box-sizing: border-box;
+  // } 
+
+  //   @font-face {
+  //     font-family: "HK Grotesk";
+  //     src: url('fonts/HKGrotesk-Bold.ttf') format("truetype");
+  // } 
+
+  // html {
+  //   height: 100%;
+  // }
+
+  // body {
+  //   height: 100%;
+  //   padding: 0;
+  //   margin: 0;
+  //   font-family: "HK Grotesk";
+  //   background-color: #f2f2f2;
+  // }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .institution-arrow-block {
+    display: flex;
+    align-items: center;
+    a {
+      text-decoration: none;
+      color: #8d9090;
+      font-size: 1rem;
+      position: relative;
+      font-weight: 500;
+      left: 0.3rem;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    > .ob-left-arrow {
+      cursor: pointer;
+      height: .9rem;
+      filter: invert(61%) sepia(7%) saturate(0%) hue-rotate(225deg)
+        brightness(92%) contrast(92%);
+    }
+  }
+
+  .institution-content-wrapper {
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    grid-gap: 5rem;
+    padding: 1.25rem;
+  }
+
+  .institution-search-bx-body {
+    max-height: 49vh;
+    overflow-y: auto;
+    &::-webkit-scrollbar-thumb {
+      background: #d1d4d4;
+      border-radius: 7px;
+      height: 1.9rem;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: #f1f1f1;
+      border-radius: 7px;
+    }
+  }
+
+  #institution-modal-content {
+    width: 100%;
+    max-width: 38rem;
+    min-height: 44rem;
+    background-color: #fff;
+    padding: 2.8rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 1px 3px #00000029;
+    border-radius: 14px;
+    color: #1B2021;
+  }
+
+  .institution-modal-header {
+    text-align: right;
+    h2 {
+      text-align: left;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+  }
+
+  .institution-modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1.25rem;
+    > a {
+      line-height: 1.75rem;
+      text-decoration: none;
+      color: #808080;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .institution-modal-close {
+    color: #8d9090;
+    font-size: 1.6rem;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: -20px;
+  }
+
+  .institution-search-container {
+    position: relative;
+    top: 1.4rem;
+    input {
+      text-indent: 1.75rem;
+    }
+  }
+
+  .institution-search-icon {
+    box-sizing: border-box;
+    position: relative;
+    padding: 0.6rem;
+    height: 2.8rem;
+    bottom: 2.8rem;
+  }
+
+  .institution-search-input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 9px;
+    color: #8C8E8F;
+    border: 1px solid #D1D2D3;
+    font-size: 1rem;
+    font-weight: 400;
+    outline-color: #70b1f7;
+  }
+
+  .institution-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ob-institution {
+    padding: 0.9rem;
+    border: 1px solid #EBEBEB;
+    margin: 0 .6rem .4rem 0;
+    border-radius: 10px;
+    width: 16rem;
+    a {
+      padding-right: 0.3rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-decoration: none;
+      img.ob-arrow-right {
+        width: .5rem;
+        height: .6rem;
+        margin-left: auto;
+        filter: invert(7%) sepia(6%) saturate(1618%) hue-rotate(142deg)
+          brightness(96%) contrast(87%);
+      }
+    }
+    &:hover {
+      background-color: #f1f1f1;
+      transition: all 0.25s ease-in-out;
+    }
+  }
+
+  .fi {
+    font-size:1.6rem;
+  }
+
+  .ob-span-text {
+    margin-left: 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1b2021;
+  }
+
+  img.ob-institution-logo {
+    width: 100%;
+    max-width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 6px;
+  }
+
+  img.country-logo {
+    width: 100%;
+    max-width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 6px;
+  }
+
+  .container-onboarding {
+    font-size: 1.25rem;
+    p {
+      font-size: 1.25rem;
+      font-weight: 500;
+      text-align: left;
+      line-height: 1.9rem;
+    }
+  }
+
+  .ob-btn-primary {
+    border: none;
+    width: 17.5rem;
+    height: 3.4rem;
+    margin-top: 6.25rem;
+    background: #3A53EE;
+    padding: 0.6rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 10px;
+    display: none;
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  .company-image-wrapper {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    margin-bottom: 1.25rem;
+  }
+
+  @media screen and (max-width: 990px) {
+    .ob-institution {
+      width: 96%;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+
+    .institution-search-bx-body {
+      max-height: 100%;
+    }
+
+    #institution-modal-content {
+      max-width: 100%;
+      min-height: 100%;
+      height: 100%;
+      border-radius: 0;
+      display: none;
+    }
+
+    .container-onboarding {
+      p {
+        text-align: center;
+      }
+      text-align: center;
+    }
+
+    .institution-content-wrapper {
+      padding: 0;
+      height: 100%;
+    }
+
+    .ob-btn-primary {
+      display: block;
+    }
+
+    .institution-container {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
+
+    .institution-modal-header {
+      margin-top: 1.5rem;
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .ob-institution {
+      span {
+        font-size: .8rem;
+      }
+    }
+  }
+}

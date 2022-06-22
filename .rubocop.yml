@@ -8,3 +8,5 @@ AllCops:
 
 Naming/AccessorMethodName:
   Enabled: false
+Layout/LineLength:
+  Enabled: false
