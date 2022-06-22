@@ -7,6 +7,7 @@ module Banking
     include Singleton
     SECRET_ID = ENV['NORDIGEN_SECRET_ID']
     SECRET_KEY = ENV['NORDIGEN_SECRET_KEY']
+    using Nordigen::ApiRefinements
 
     def initialize
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)

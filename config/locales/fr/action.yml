@@ -3,7 +3,16 @@ fra:
     banking/cash_synchronizations:
       new: 'Nouvelle connection Bancaire'
   labels:
-    account_sync_authorization_required: "Vous devez autoriser la synchronisation en connectant votre compte bancaire"
-    iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné"
+    account_sync_authorization_required: "Vous devez autoriser la synchronisation en connectant votre compte bancaire."
+    iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné."
     init_bank_transactions: "Connecter mon compte bancaire"
     sync_bank_transactions: "Synchroniser les relevés de compte"
+    none_account_iban_matches_cash_iban: "Aucun des comptes selectionnés pour la synchronisation ne correspond à l'iban du compte : %{cash_name}."
+    cash_transactions_synchronized: "Les relevés de compte bancaire ont bien été synchronisés."
+    error_during_transactions_synchronization: "Une erreur est survenue lors de la synchronisation des relevés de compte : %{message}"
+    cash_transactions_synchronizing: "La synchronization des relevés de compte bancaire est en cours. Une notification vous sera envoyée dès qu'elle sera terminée."
+    nordigen:
+      requisition_created: "La réquisition a bien été crée"
+      account_linked: "Le compte a bien été connecté"
+      access_expired: "L'accés au compte a expiré"
+      unedergoing_authentication: "L'authentification auprès du service bancaire a échoué"
