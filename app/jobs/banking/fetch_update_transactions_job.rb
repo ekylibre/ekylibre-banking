@@ -54,10 +54,12 @@ module Banking
 
       def update_cash_provider(cash, accounts)
         account = accounts.select {|account| account.iban == cash.iban }.first
-        if cash.provider.blank?
-          cash.provider = provider_for_account(account)
-          cash.save!
+        if cash.provider.present? && (cash.provider_vendor != VENDOR || cash.provider_data[:id] != account.id)
+          raise StandardError.new("Cash provider already setted, and it doesn't match Nordigen provider")
         end
+
+        cash.provider = provider_for_account(account)
+        cash.save!
       end
 
       def import_bank_statements(cash, nordigen_service)

@@ -33,7 +33,7 @@ module Banking
     end
 
     def transactions1
-      transaction1 = Nordigen::Transaction.new(
+      transaction1 = Ekylibre::Nordigen::Transaction.new(
         OpenStruct.new(
           bookingDate: '2022-05-26',
           endToEndId: 'NOTPROVIDED',
@@ -53,7 +53,7 @@ module Banking
     end
 
     def transactions2
-      transaction2 = Nordigen::Transaction.new(
+      transaction2 = Ekylibre::Nordigen::Transaction.new(
         OpenStruct.new(
           bookingDate: '2022-06-27',
           valueDate: '2022-06-28',

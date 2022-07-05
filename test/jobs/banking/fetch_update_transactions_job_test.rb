@@ -11,7 +11,7 @@ module Banking
 
       @nordigen_service = Minitest::Mock.new
       @nordigen_service.expect(:get_requisition_accounts, [OpenStruct.new(iban: iban, id: id)], ['requisition_id'])
-      @nordigen_service.expect(:get_account_transactions, [], { account_uuid: '1' })
+      @nordigen_service.expect(:get_account_transactions, [], [{ account_uuid: '1' }])
       @user = User.first
     end
 

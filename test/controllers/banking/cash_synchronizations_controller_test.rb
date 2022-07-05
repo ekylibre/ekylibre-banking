@@ -35,7 +35,7 @@ module Banking
       Preference.set!("requisition_id_cash_id_#{cash.id}", requisition_id)
 
       mock = MiniTest::Mock.new
-      mock.expect(:perform_later, nil, { cash_id: cash.id.to_s, requisition_id: requisition_id, user: User.first })
+      mock.expect(:perform_later, nil, [{ cash_id: cash.id.to_s, requisition_id: requisition_id, user: User.first }])
 
       ::Banking::FetchUpdateTransactionsJob.stub :perform_later,  ->(arg) { mock.perform_later arg } do
         get :perform, params: { cash_id: cash.id }
