@@ -12,8 +12,8 @@ module Ekylibre
       def initialize
         @banking_navigation_tree = Ekylibre::Navigation::Tree
                                       .load_file(banking_navigation_file_path,
-                                                :navigation,
-                                                %i[part group item])
+                                                 :navigation,
+                                                 %i[part group item])
 
       end
 

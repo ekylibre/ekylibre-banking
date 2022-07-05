@@ -1,4 +1,4 @@
- module Ekylibre 
+module Ekylibre
   module Nordigen
     class Requisition < SimpleDelegator
       STATUS_DESCRIPTION = {

@@ -6,14 +6,14 @@ module Ekylibre
       extend Forwardable
 
       def_delegators :@nordigen_transaction, :bankTransactionCode, :bookingDate, :endToEndId,
-        :entryReference, :remittanceInformationUnstructured, :remittanceInformationUnstructuredArray,
-        :transactionAmount, :transactionId, :valueDate
+                     :entryReference, :remittanceInformationUnstructured, :remittanceInformationUnstructuredArray,
+                     :transactionAmount, :transactionId, :valueDate
 
       def initialize(nordigen_transaction)
         @nordigen_transaction = nordigen_transaction
       end
-      
-      def name 
+
+      def name
         if remittanceInformationUnstructuredArray&.any?
           remittanceInformationUnstructuredArray.first
         else
