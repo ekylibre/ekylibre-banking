@@ -33,7 +33,7 @@ module Banking
                             institution_id: institution_id,
                             reference_id: reference_id,
                             max_historical_days: max_historical_days)
-      Nordigen::Requisition.new(requisition)
+      Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
     # :id, :iban
@@ -56,17 +56,17 @@ module Banking
       account = @client.account(account_uuid)
       acounts_transactions = account.get_transactions&.transactions
       acounts_transactions.booked.map! do |transaction|
-        Nordigen::Transaction.new(transaction)
+        Ekylibre::Nordigen::Transaction.new(transaction)
       end
       acounts_transactions.pending.map! do |transaction|
-        Nordigen::Transaction.new(transaction)
+        Ekylibre::Nordigen::Transaction.new(transaction)
       end
       acounts_transactions
     end
 
     def get_requisition_by_id(requisition_id)
       requisition = @client.requisition.get_requisition_by_id(requisition_id)
-      Nordigen::Requisition.new(requisition)
+      Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
     def get_requisition_accounts(requisition_id)

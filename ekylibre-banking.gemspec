@@ -1,10 +1,10 @@
 # Maintain your gem's version:
-require_relative 'lib/ekylibre-banking/version'
+require_relative 'lib/ekylibre/banking/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
   spec.name = 'ekylibre-banking'
-  spec.version = EkylibreBanking::VERSION
+  spec.version = Ekylibre::Banking::VERSION
   spec.authors = ['Ekylibre developers']
   spec.email = ['dev@ekylibre.com']
 
