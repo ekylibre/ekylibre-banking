@@ -9,9 +9,9 @@ module Banking
     # @param [Hash] opts
     # @option opts [OpenStruct] :transactions transactions
     def import_bank_statements(transactions: )
-      transactions_by_month = transactions.transactions.booked.group_by do |item|
-        date = item.valueDate || item.bookingDate
-        Date.parse(date).beginning_of_month.to_date
+      transactions_by_month = transactions.booked.group_by do |item|
+        date = item.transfered_on
+        date.beginning_of_month.to_date
       end
 
       transactions_by_month.each do |month, transaction_items|
@@ -32,20 +32,14 @@ module Banking
       end
 
       def create_bank_statement_item(bank_statement, item)
-        unless BankStatementItem.find_by(transaction_number: item.transactionId)
-          name = if item.remittanceInformationUnstructuredArray&.any?
-                   item.remittanceInformationUnstructuredArray.first
-                 else
-                   item.remittanceInformationUnstructured
-                 end
-
+        unless BankStatementItem.find_by(transaction_number: item.transaction_number)
           bank_statement.items.create!(
-            initiated_on: Date.parse(item.bookingDate),
-            name: name,
-            memo: item.remittanceInformationUnstructuredArray&.join(', '),
-            balance: item.transactionAmount.amount.to_f,
-            transaction_number: item.transactionId,
-            transfered_on: Date.parse(item.valueDate || item.bookingDate )
+            initiated_on: item.initiated_on,
+            name: item.name,
+            memo: item.memo,
+            balance: item.balance,
+            transaction_number: item.transaction_number,
+            transfered_on: item.transfered_on
           )
         end
       end

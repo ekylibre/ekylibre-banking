@@ -7,7 +7,6 @@ module Banking
     include Singleton
     SECRET_ID = ENV['NORDIGEN_SECRET_ID']
     SECRET_KEY = ENV['NORDIGEN_SECRET_KEY']
-    using Nordigen::ApiRefinements
 
     def initialize
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
@@ -30,10 +29,11 @@ module Banking
     end
 
     def create_requisition(redirect_url:, institution_id:, reference_id:, max_historical_days: 90)
-      @client.init_session( redirect_url: redirect_url,
+      requisition = @client.init_session( redirect_url: redirect_url,
                             institution_id: institution_id,
                             reference_id: reference_id,
                             max_historical_days: max_historical_days)
+      Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
     # :id, :iban
@@ -54,11 +54,19 @@ module Banking
     #   pending=> [{...},  {...}]
     def get_account_transactions(account_uuid: )
       account = @client.account(account_uuid)
-      account.get_transactions
+      acounts_transactions = account.get_transactions&.transactions
+      acounts_transactions.booked.map! do |transaction|
+        Ekylibre::Nordigen::Transaction.new(transaction)
+      end
+      acounts_transactions.pending.map! do |transaction|
+        Ekylibre::Nordigen::Transaction.new(transaction)
+      end
+      acounts_transactions
     end
 
     def get_requisition_by_id(requisition_id)
-      @client.requisition.get_requisition_by_id(requisition_id)
+      requisition = @client.requisition.get_requisition_by_id(requisition_id)
+      Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
     def get_requisition_accounts(requisition_id)
