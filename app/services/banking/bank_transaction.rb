@@ -19,6 +19,7 @@ module Banking
         transaction_items.each do |transaction_item|
           create_bank_statement_item(bank_statement, transaction_item)
         end
+        bank_statement.reload.save!
       end
     end
 

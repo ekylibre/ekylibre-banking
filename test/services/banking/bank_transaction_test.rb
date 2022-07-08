@@ -11,6 +11,7 @@ module Banking
       assert_equal('2022-05-01', bank_statement.started_on.to_s)
       assert_equal('2022-05-31', bank_statement.stopped_on.to_s)
       assert_equal(cash, bank_statement.cash)
+      assert_equal(80.20, bank_statement.debit)
 
       item = bank_statement.items.first
       assert_equal('2022-05-26', item.initiated_on.to_s)
