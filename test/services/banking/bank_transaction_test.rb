@@ -6,7 +6,7 @@ module Banking
 
     test 'It creates a new bank statement and item with correct attributes' do
       cash = cashes(:cashes_001)
-      Banking::BankTransaction.new(cash_id: cash.id).import_bank_statements(transactions: transactions1)
+      Banking::BankTransaction.call(cash: cash.id, transactions: transactions1)
       bank_statement = BankStatement.find_by(number: '2022-5')
       assert_equal('2022-05-01', bank_statement.started_on.to_s)
       assert_equal('2022-05-31', bank_statement.stopped_on.to_s)
@@ -24,7 +24,7 @@ module Banking
 
     test 'It creates a new bank statement and item with correct attributes if data struture is different' do
       cash = cashes(:cashes_001)
-      Banking::BankTransaction.new(cash_id: cash.id).import_bank_statements(transactions: transactions2)
+      Banking::BankTransaction.call(cash: cash, transactions: transactions2)
       bank_statement = BankStatement.find_by(number: '2022-6')
       item = bank_statement.items.first
       assert_equal('2022-06-27', item.initiated_on.to_s)
