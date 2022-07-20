@@ -25,7 +25,7 @@ module Banking
     end
 
     private
-      attr_reader :cash, :transactions 
+      attr_reader :cash, :transactions
 
       def transactions_by_month
         transactions.booked.group_by do |item|

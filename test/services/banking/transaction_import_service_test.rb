@@ -44,7 +44,6 @@ module Banking
       end
     end
 
-
     def transactions1
       transaction1 = Ekylibre::Nordigen::Transaction.new(
         OpenStruct.new(
