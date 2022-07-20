@@ -13,9 +13,8 @@ module Banking
 
     def call
       transactions_by_month.each do |beginning_of_month, transaction_items|
-        next if !bank_statement_can_be_imported?(beginning_of_month)
-
-        bank_statement = create_bank_statement(beginning_of_month)
+        bank_statement = find_or_create_bank_statement(beginning_of_month)
+        next if bank_statement.nil?
 
         transaction_items.each do |transaction_item|
           create_bank_statement_item(bank_statement, transaction_item)
@@ -34,16 +33,21 @@ module Banking
         end
       end
 
-      def create_bank_statement(beginning_of_month)
+      def find_or_create_bank_statement(beginning_of_month)
         end_of_month = beginning_of_month.end_of_month
-
         number = "#{beginning_of_month.year}-#{beginning_of_month.month}"
-        BankStatement.create!(cash: cash, number: number, started_on: beginning_of_month, stopped_on: end_of_month)
+
+        bank_statement = BankStatement.find_by(cash: cash, number: number, started_on: beginning_of_month, stopped_on: end_of_month)
+        return bank_statement if bank_statement.present?
+
+        if bank_statement_can_be_created?(beginning_of_month)
+          BankStatement.create!(cash: cash, number: number, started_on: beginning_of_month, stopped_on: end_of_month)
+        end
       end
 
-      def bank_statement_can_be_imported?(beginning_of_month)
+      def bank_statement_can_be_created?(beginning_of_month)
         end_of_month = beginning_of_month.end_of_month
-        BankStatement.between(beginning_of_month, end_of_month).empty?
+        BankStatement.for_cash(cash).between(beginning_of_month, end_of_month).empty?
       end
 
       def create_bank_statement_item(bank_statement, item)

@@ -5,7 +5,7 @@ module Ekylibre
     class Transaction
       extend Forwardable
 
-      def_delegators :@nordigen_transaction, :TransactionsImportServiceCode, :bookingDate, :endToEndId,
+      def_delegators :@nordigen_transaction, :bankTransactionCode, :bookingDate, :endToEndId,
                      :entryReference, :remittanceInformationUnstructured, :remittanceInformationUnstructuredArray,
                      :transactionAmount, :transactionId, :valueDate
 
