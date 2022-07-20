@@ -2,11 +2,11 @@ require 'test_helper'
 require_relative '../../test_helper'
 
 module Banking
-  class BankTransactionTest < Ekylibre::Testing::ApplicationTestCase::WithFixtures
+  class TransactionsImportServiceTest < Ekylibre::Testing::ApplicationTestCase::WithFixtures
 
     test 'It creates a new bank statement and item with correct attributes' do
       cash = cashes(:cashes_001)
-      Banking::BankTransaction.call(cash: cash.id, transactions: transactions1)
+      Banking::TransactionsImportService.call(cash: cash, transactions: transactions1)
       bank_statement = BankStatement.find_by(number: '2022-5')
       assert_equal('2022-05-01', bank_statement.started_on.to_s)
       assert_equal('2022-05-31', bank_statement.stopped_on.to_s)
@@ -24,7 +24,7 @@ module Banking
 
     test 'It creates a new bank statement and item with correct attributes if data struture is different' do
       cash = cashes(:cashes_001)
-      Banking::BankTransaction.call(cash: cash, transactions: transactions2)
+      Banking::TransactionsImportService.call(cash: cash, transactions: transactions2)
       bank_statement = BankStatement.find_by(number: '2022-6')
       item = bank_statement.items.first
       assert_equal('2022-06-27', item.initiated_on.to_s)
@@ -32,6 +32,18 @@ module Banking
       assert_equal('PAIEMENT PAR CARTE 26/06/2022 TRANSPORT, COMPTE 51532324', item.memo)
       assert_equal('2022-06-28', item.transfered_on.to_s)
     end
+
+    test 'It doesn\'t creates a new bank statement if one with same dates already exist' do
+      cash = cashes(:cashes_001)
+      bank_statement = bank_statements(:bank_statements_001)
+      started_on = '2022-04-26'
+      stopped_on = '2022-05-29'
+      bank_statement.update(started_on: started_on,  stopped_on: '2022-05-29')
+      assert_no_difference 'BankStatement.count' do
+        Banking::TransactionsImportService.call(cash: cash, transactions: transactions1)
+      end
+    end
+
 
     def transactions1
       transaction1 = Ekylibre::Nordigen::Transaction.new(

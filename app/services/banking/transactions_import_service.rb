@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Banking
-  class BankTransaction
+  class TransactionsImportService
     def self.call(*args)
       new(*args).call
     end
 
     def initialize(cash:, transactions:)
-      @cash = Cash.find(cash)
+      @cash = cash
       @transactions = transactions
     end
 

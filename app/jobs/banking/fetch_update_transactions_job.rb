@@ -68,7 +68,7 @@ module Banking
 
         transactions = nordigen_service.get_account_transactions(account_uuid: account_uuid)
         cash = Cash.find(cash.id)
-        ::Banking::BankTransaction.call(cash: cash, transactions: transactions)
+        ::Banking::TransactionsImportService.call(cash: cash, transactions: transactions)
       end
 
       def provider_for_account(account)
