@@ -10,26 +10,35 @@ module Banking
 
     def initialize
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
-      token_data = @client.generate_token
     end
 
+    attr_reader :client
+
     def get_institution_by_bic(bic)
+      generate_token
+
       get_institutions.select {|b| b.bic == bic }.first
     end
 
     def get_institution_by_id(id)
-      @client.institution.get_institution_by_id(id)
+      generate_token
+
+      client.institution.get_institution_by_id(id)
     end
 
     # @param [String] country country name abbreviated
     # @return [Array<OpenStruct>] institutions of the country
     # institution attr. : :id, :name, :bic, :transaction_total_days, :countries logo
     def get_institutions(country = Preference[:country])
-      @client.institution.get_institutions(country)
+      generate_token
+
+      client.institution.get_institutions(country)
     end
 
     def create_requisition(redirect_url:, institution_id:, reference_id:, max_historical_days: 90)
-      requisition = @client.init_session( redirect_url: redirect_url,
+      generate_token
+
+      requisition = client.init_session( redirect_url: redirect_url,
                             institution_id: institution_id,
                             reference_id: reference_id,
                             max_historical_days: max_historical_days)
@@ -38,7 +47,9 @@ module Banking
 
     # :id, :iban
     def get_account_info(account_uuid)
-      account = @client.account(account_uuid)
+      generate_token
+
+      account = client.account(account_uuid)
       account.get_metadata
     end
 
@@ -53,7 +64,9 @@ module Banking
     #              :valueDate=>"2022-01-13"}, {...}]
     #   pending=> [{...},  {...}]
     def get_account_transactions(account_uuid: )
-      account = @client.account(account_uuid)
+      generate_token
+
+      account = client.account(account_uuid)
       acounts_transactions = account.get_transactions&.transactions
       acounts_transactions.booked.map! do |transaction|
         Ekylibre::Nordigen::Transaction.new(transaction)
@@ -65,16 +78,26 @@ module Banking
     end
 
     def get_requisition_by_id(requisition_id)
-      requisition = @client.requisition.get_requisition_by_id(requisition_id)
+      generate_token
+
+      requisition = client.requisition.get_requisition_by_id(requisition_id)
       Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
     def get_requisition_accounts(requisition_id)
+      generate_token
+
       requisition = get_requisition_by_id(requisition_id)
       requisition.accounts.map do |account_uuid|
         get_account_info(account_uuid)
       end
     end
+
+    private
+
+      def generate_token
+        client.generate_token
+      end
   end
 
 end
