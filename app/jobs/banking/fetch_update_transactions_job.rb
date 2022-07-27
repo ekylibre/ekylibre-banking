@@ -14,11 +14,15 @@ module Banking
         import_bank_statements(cash.reload, nordigen_service)
         user.notifications.create!(success_notification_params(cash))
       rescue StandardError => error
+        error_message = error
+        if error.is_a?(Faraday::ServerError)
+          error_message = :nordigen_server_error.tl
+        end
         Rails.logger.error $ERROR_INFO
         Rails.logger.error $ERROR_INFO.backtrace.join("\n")
         ExceptionNotifier.notify_exception($ERROR_INFO, data: { message: error })
         ElasticAPM.report(error)
-        user.notifications.create!(error_notification_params(error))
+        user.notifications.create!(error_notification_params(error_message))
       end
     end
 
