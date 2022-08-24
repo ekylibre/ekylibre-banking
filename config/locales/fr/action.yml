@@ -13,6 +13,7 @@ fra:
     error_during_transactions_synchronization: "Une erreur est survenue lors de la synchronisation des relevés de compte : %{message}"
     cash_transactions_synchronizing: "La synchronisation des relevés de compte bancaire est en cours. Une notification vous sera envoyée dès qu'elle sera terminée."
     nordigen_server_error: "Le services de synchronisation des relevés de compte bancaire n'est pas disponibles. Veuillez réessayer ultérieurement."
+    access_expired_error: "L’autorisation de connexion à votre banque a expiré. Veuillez reconnecter votre compte bancaire."
     nordigen:
       requisition_created: "La réquisition a bien été crée"
       account_linked: "Le compte a bien été connecté"
