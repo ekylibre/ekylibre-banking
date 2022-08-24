@@ -17,6 +17,10 @@ module Banking
         error_message = error
         if error.is_a?(Faraday::ServerError)
           error_message = :nordigen_server_error.tl
+        elsif error.is_a?(NordigenService::AccessExpiredError)
+          error_message = :access_expired_error.tl
+          nordigen_service.delete_requisition(requisition_id)
+          Preference.find_by(name: "requisition_id_cash_id_#{cash_id}").destroy
         end
         Rails.logger.error $ERROR_INFO
         Rails.logger.error $ERROR_INFO.backtrace.join("\n")

@@ -13,6 +13,7 @@ eng:
     error_during_transactions_synchronization: "Error during account statement synchronization : %{message}"
     cash_transactions_synchronizing: "Account statements synchronizing."
     nordigen_server_error: "Account statements synchronization services is down. Please try again later."
+    access_expired_error: "Authorization acces expired. Link bank account again." 
     nordigen:
       requisition_created: "Requisition has been successfully created"
       account_linked: "Account has been successfully linked"

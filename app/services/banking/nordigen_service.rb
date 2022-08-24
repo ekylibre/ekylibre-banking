@@ -4,6 +4,8 @@ require 'nordigen-ruby'
 
 module Banking
   class NordigenService
+    class AccessExpiredError < StandardError; end
+
     include Singleton
     SECRET_ID = ENV['NORDIGEN_SECRET_ID']
     SECRET_KEY = ENV['NORDIGEN_SECRET_KEY']
@@ -73,12 +75,21 @@ module Banking
       generate_token
 
       account = client.account(account_uuid)
-      acounts_transactions = account.get_transactions&.transactions
-      acounts_transactions.booked.map! do |transaction|
-        Ekylibre::Nordigen::Transaction.new(transaction)
+      response = account.get_transactions
+
+      if response.status_code = 401
+        raise AccessExpiredError.new(response.details)
       end
-      acounts_transactions.pending.map! do |transaction|
-        Ekylibre::Nordigen::Transaction.new(transaction)
+
+      acounts_transactions = response&.transactions
+
+      if acounts_transactions.present?
+        acounts_transactions.booked.map! do |transaction|
+          Ekylibre::Nordigen::Transaction.new(transaction)
+        end
+        acounts_transactions.pending.map! do |transaction|
+          Ekylibre::Nordigen::Transaction.new(transaction)
+        end
       end
       acounts_transactions
     end
