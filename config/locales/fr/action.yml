@@ -5,7 +5,8 @@ fra:
   labels:
     account_sync_authorization_required: "Vous devez autoriser la synchronisation en connectant votre compte bancaire."
     iban_should_be_provided: "Pour synchroniser les relevés, l'IBAN du compte doit être renseigné."
-    init_bank_transactions: "Connecter mon compte bancaire"
+    create_requisition: "Connecter mon compte bancaire"
+    delete_requisition: "Déconnecter mon compte bancaire"
     sync_bank_transactions: "Synchroniser les relevés de compte"
     none_account_iban_matches_cash_iban: "Aucun des comptes selectionnés pour la synchronisation ne correspond à l'iban du compte : %{cash_name}."
     cash_transactions_synchronized: "Les relevés de compte bancaire ont bien été synchronisés."

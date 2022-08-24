@@ -6,7 +6,7 @@ module Banking
       cash = Cash.find_by_id(params[:cash_id])
       nordigen_service = Banking::NordigenService.instance
 
-      if (requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{params[:cash_id]}")&.value)
+      if (requisition_id = find_requisition_id(params[:cash_id]))
         requisition = nordigen_service.get_requisition_by_id(requisition_id)
         redirect_to(requisition.link)
       end
@@ -35,6 +35,17 @@ module Banking
       redirect_to requisition.link
     end
 
+    def delete_requisition
+      cash_id = params[:cash_id]
+      requisition_id = find_requisition_id(cash_id)
+      if requisition_id.present?
+        nordigen_service = Banking::NordigenService.instance
+        nordigen_service.delete_requisition(requisition_id)
+        Preference.find_by(name: "requisition_id_cash_id_#{cash_id}").destroy
+      end
+      redirect_to backend_cash_path(cash_id)
+    end
+
     def perform
       cash_id = params[:cash_id]
       cash = Cash.find(cash_id)
@@ -44,7 +55,7 @@ module Banking
         return
       end
 
-      if (requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{cash_id}")&.value).nil?
+      if (requisition_id = find_requisition_id(cash_id)).nil?
         notify_warning(:account_sync_authorization_required.tl)
       else
         ::Banking::FetchUpdateTransactionsJob.perform_later(cash_id: cash_id, requisition_id: requisition_id, user: current_user)
@@ -53,5 +64,10 @@ module Banking
       redirect_to backend_cash_path(cash_id)
     end
 
+    private
+
+      def find_requisition_id(cash_id)
+        Preference.find_by(name: "requisition_id_cash_id_#{cash_id}")&.value
+      end
   end
 end

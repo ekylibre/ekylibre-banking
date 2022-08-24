@@ -1,6 +1,10 @@
 - requisition_id = Preference.find_by(name: "requisition_id_cash_id_#{resource.id}")&.value
 - requisition = Banking::NordigenService.instance.get_requisition_by_id(requisition_id) if requisition_id.present?
 
-- unless requisition.present? && requisition.linked?
-  = tool_to(:init_bank_transactions.tl, new_banking_cash_synchronization_path(cash_id: resource.id))
-= tool_to(:sync_bank_transactions.tl, perform_banking_cash_synchronization_path(cash_id: resource.id))
+- requisition_is_active = requisition.present? && requisition.linked?
+- if requisition_is_active
+  = tool_to(:delete_requisition.tl, delete_requisition_banking_cash_synchronization_path(cash_id: resource.id), method: :delete)
+- else
+  = tool_to(:create_requisition.tl, new_banking_cash_synchronization_path(cash_id: resource.id))
+
+= tool_to(:sync_bank_transactions.tl, perform_banking_cash_synchronization_path(cash_id: resource.id), disabled: !requisition_is_active)

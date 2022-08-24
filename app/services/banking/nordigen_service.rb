@@ -45,6 +45,12 @@ module Banking
       Ekylibre::Nordigen::Requisition.new(requisition)
     end
 
+    def delete_requisition(requisition_id)
+      generate_token
+
+      client.requisition.delete_requisition(requisition_id)
+    end
+
     # :id, :iban
     def get_account_info(account_uuid)
       generate_token
