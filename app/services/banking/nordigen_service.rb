@@ -77,7 +77,7 @@ module Banking
       account = client.account(account_uuid)
       response = account.get_transactions
 
-      if response.status_code = 401
+      if response.status_code == 401
         raise AccessExpiredError.new(response.details)
       end
 
