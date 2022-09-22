@@ -20,7 +20,7 @@ module Banking
 
     test '#new when cash has bank_identifier_code setted' do
       get :new, params: { cash_id: cash.id }
-      assert_redirected_to build_requisition_banking_cash_synchronization_path(cash_id: cash.id), 'Redirects to build requisition'
+      assert_redirected_to build_requisition_banking_cash_synchronization_path(cash_id: cash.id, institution_id: 'WISE_TRWIGB22'), 'Redirects to build requisition'
     end
 
     test '#build_requisition' do
