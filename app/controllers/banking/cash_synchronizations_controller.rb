@@ -13,7 +13,7 @@ module Banking
 
       if cash && (bic = cash.bank_identifier_code)
         institution = nordigen_service.get_institution_by_bic(bic)
-        redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id), institution_id: institution.id) if institution
+        redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id, institution_id: institution.id)) if institution
       end
       institutions = nordigen_service.get_institutions
       @list = institutions.collect(&:marshal_dump).to_json
