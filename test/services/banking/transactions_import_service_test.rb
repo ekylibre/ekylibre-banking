@@ -18,7 +18,7 @@ module Banking
       assert_equal('PAIEMENT PAR CARTE 25/05/2022 MARCHE', item.name)
       assert_nil(item.memo)
       assert_equal(80.20, item.balance)
-      assert_equal('40001875091_12340', item.transaction_number)
+      assert_nil(item.transaction_number)
       assert_equal('2022-05-26', item.transfered_on.to_s)
     end
 
@@ -44,6 +44,13 @@ module Banking
       end
     end
 
+    test "It raise an error if transaction doesn't have transacton id" do
+      cash = cashes(:cashes_001)
+      assert_raise StandardError do
+        Banking::TransactionsImportService.call(cash: cash, transactions: transactions3)
+      end
+    end
+
     def transactions1
       transaction1 = Ekylibre::Nordigen::Transaction.new(
         OpenStruct.new(
@@ -55,7 +62,8 @@ module Banking
               amount: '-80.20',
               currency: 'EUR'
             ),
-          transactionId: '40001875091_12340'
+          transactionId: '40001875091_12340',
+          internalTransactionId: '40001875091_12341'
         )
       )
 
@@ -76,12 +84,34 @@ module Banking
               amount: '-50.20',
               currency: 'EUR'
             ),
-          transactionId: '40001875091_12350'
+          transactionId: '40001875091_12350',
+          internalTransactionId: '40001875091_12342'
         )
       )
 
       OpenStruct.new(
         booked: [transaction2]
+      )
+    end
+
+    def transactions3
+      transaction3 = Ekylibre::Nordigen::Transaction.new(
+        OpenStruct.new(
+          bookingDate: '2022-06-27',
+          valueDate: '2022-06-28',
+          endToEndId: 'NOTPROVIDED',
+          remittanceInformationUnstructuredArray: ['PAIEMENT PAR CARTE 26/06/2022 TRANSPORT', 'COMPTE 51532324'],
+          transactionAmount:
+            OpenStruct.new(
+              amount: '-50.20',
+              currency: 'EUR'
+            ),
+          transactionId: '40001875091_12350'
+        )
+      )
+
+      OpenStruct.new(
+        booked: [transaction3]
       )
     end
   end
