@@ -7,7 +7,7 @@ module Ekylibre
 
       def_delegators :@nordigen_transaction, :bankTransactionCode, :bookingDate, :endToEndId,
                      :entryReference, :remittanceInformationUnstructured, :remittanceInformationUnstructuredArray,
-                     :transactionAmount, :transactionId, :valueDate
+                     :transactionAmount, :transactionId, :valueDate, :internalTransactionId
 
       def initialize(nordigen_transaction)
         @nordigen_transaction = nordigen_transaction
