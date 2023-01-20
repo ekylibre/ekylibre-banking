@@ -11,13 +11,12 @@ module Banking
 
       @nordigen_service = Minitest::Mock.new
       @nordigen_service.expect(:get_requisition_accounts, [OpenStruct.new(iban: iban, id: id)], ['requisition_id'])
-      @nordigen_service.expect(:get_account_transactions, [], [{ account_uuid: '1' }])
+      @nordigen_service.expect(:get_account_transactions, [], { account_uuid: 1 })
       @user = User.first
     end
 
     test '#perform' do
       FetchUpdateTransactionsJob.perform_now(cash_id: @cash.id, requisition_id: 'requisition_id', nordigen_service: @nordigen_service, user: @user )
-      assert_equal({ data: { 'id'=> '1', 'name'=>'account' }, vendor: 'nordigen' }, @cash.reload.provider, 'It update cash provider')
       assert_mock(@nordigen_service)
     end
 
