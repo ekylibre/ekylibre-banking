@@ -10,8 +10,7 @@ module Banking
         cash = Cash.find(cash_id)
         accounts = nordigen_service.get_requisition_accounts(requisition_id)
         check_iban(cash, accounts)
-        update_cash_provider(cash, accounts)
-        import_bank_statements(cash.reload, nordigen_service)
+        import_bank_statements(cash, accounts, nordigen_service)
         user.notifications.create!(success_notification_params(cash))
       rescue StandardError => error
         error_message = error
@@ -60,34 +59,10 @@ module Banking
         end
       end
 
-      def update_cash_provider(cash, accounts)
+      def import_bank_statements(cash, accounts, nordigen_service)
         account = accounts.select {|account| account.iban == cash.iban }.first
-        if cash.provider.present? && (cash.provider_vendor != VENDOR || cash.provider_data[:id] != account.id)
-          raise StandardError.new("Cash provider already setted, and it doesn't match Nordigen provider")
-        end
-
-        cash.provider = provider_for_account(account)
-        cash.save!
-      end
-
-      def import_bank_statements(cash, nordigen_service)
-        account_uuid = cash.provider_data[:id]
-        return if account_uuid.nil?
-
-        transactions = nordigen_service.get_account_transactions(account_uuid: account_uuid)
-        cash = Cash.find(cash.id)
+        transactions = nordigen_service.get_account_transactions(account_uuid: account.id)
         ::Banking::TransactionsImportService.call(cash: cash, transactions: transactions)
       end
-
-      def provider_for_account(account)
-        {
-          vendor: VENDOR,
-          data: {
-            id: account.id.to_s,
-            name: 'account'
-          }
-        }
-      end
-
   end
 end
