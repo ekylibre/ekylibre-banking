@@ -5,15 +5,18 @@ module Banking
     def new
       cash = Cash.find_by_id(params[:cash_id])
       nordigen_service = Banking::NordigenService.instance
-
       if (requisition_id = find_requisition_id(params[:cash_id]))
         requisition = nordigen_service.get_requisition_by_id(requisition_id)
         redirect_to(requisition.link)
+        return
       end
 
-      if cash && (bic = cash.bank_identifier_code)
+      if cash && (bic = cash.bank_identifier_code).present?
         institution = nordigen_service.get_institution_by_bic(bic)
-        redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id, institution_id: institution.id)) if institution
+        if institution
+          redirect_to(build_requisition_banking_cash_synchronization_path(cash_id: cash.id, institution_id: institution.id))
+          return
+        end
       end
       institutions = nordigen_service.get_institutions
       @list = institutions.collect(&:marshal_dump).to_json
