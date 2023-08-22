@@ -4,44 +4,64 @@ require 'nordigen-ruby'
 
 module Banking
   class NordigenService
+    class AccessExpiredError < StandardError; end
+
     include Singleton
     SECRET_ID = ENV['NORDIGEN_SECRET_ID']
     SECRET_KEY = ENV['NORDIGEN_SECRET_KEY']
-    
+
     def initialize
       @client = Nordigen::NordigenClient.new(secret_id: SECRET_ID, secret_key: SECRET_KEY)
-      token_data = @client.generate_token()
     end
 
+    attr_reader :client
+
     def get_institution_by_bic(bic)
+      generate_token
+
       get_institutions.select {|b| b.bic == bic }.first
     end
 
     def get_institution_by_id(id)
-      @client.institution.get_institution_by_id(id)
+      generate_token
+
+      client.institution.get_institution_by_id(id)
     end
 
     # @param [String] country country name abbreviated
     # @return [Array<OpenStruct>] institutions of the country
     # institution attr. : :id, :name, :bic, :transaction_total_days, :countries logo
     def get_institutions(country = Preference[:country])
-      @client.institution.get_institutions(country)
+      generate_token
+
+      client.institution.get_institutions(country)
     end
 
-    def create_requisition(redirect_url: , institution_id:, reference_id:, max_historical_days: 90)
-      @client.init_session( redirect_url: redirect_url,
+    def create_requisition(redirect_url:, institution_id:, reference_id:, max_historical_days: 90)
+      generate_token
+
+      requisition = client.init_session( redirect_url: redirect_url,
                             institution_id: institution_id,
                             reference_id: reference_id,
                             max_historical_days: max_historical_days)
+      Ekylibre::Nordigen::Requisition.new(requisition)
+    end
+
+    def delete_requisition(requisition_id)
+      generate_token
+
+      client.requisition.delete_requisition(requisition_id)
     end
 
     # :id, :iban
     def get_account_info(account_uuid)
-      account = @client.account(account_uuid)
-      account.get_metadata()
+      generate_token
+
+      account = client.account(account_uuid)
+      account.get_metadata
     end
 
-    # @param [Hash] opts 
+    # @param [Hash] opts
     # @option opts [String] :account_uuid account id
     # @return [OpenStructS] account transactions
     # transactions=>
@@ -52,21 +72,49 @@ module Banking
     #              :valueDate=>"2022-01-13"}, {...}]
     #   pending=> [{...},  {...}]
     def get_account_transactions(account_uuid: )
-      account = @client.account(account_uuid)
-      account.get_transactions()
+      generate_token
+
+      account = client.account(account_uuid)
+      response = account.get_transactions
+
+      if response.status_code == 401
+        raise AccessExpiredError.new(response.details)
+      end
+
+      acounts_transactions = response&.transactions
+
+      if acounts_transactions.present?
+        acounts_transactions.booked.map! do |transaction|
+          Ekylibre::Nordigen::Transaction.new(transaction)
+        end
+        acounts_transactions.pending.map! do |transaction|
+          Ekylibre::Nordigen::Transaction.new(transaction)
+        end
+      end
+      acounts_transactions
     end
 
     def get_requisition_by_id(requisition_id)
-      @client.requisition.get_requisition_by_id(requisition_id)
+      generate_token
+
+      requisition = client.requisition.get_requisition_by_id(requisition_id)
+      Ekylibre::Nordigen::Requisition.new(requisition)
     end
-  
+
     def get_requisition_accounts(requisition_id)
+      generate_token
+
       requisition = get_requisition_by_id(requisition_id)
       requisition.accounts.map do |account_uuid|
         get_account_info(account_uuid)
       end
     end
-  end
 
+    private
+
+      def generate_token
+        client.generate_token
+      end
+  end
 
 end

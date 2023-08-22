@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   namespace :banking do
     resource :cash_synchronization, only: :new do
+      delete :delete_requisition
       get :build_requisition
       get :perform
     end

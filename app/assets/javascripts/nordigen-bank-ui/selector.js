@@ -1,11 +1,11 @@
 /**Custom version of nordigen ui yarn pacakge
- * 
+ *
  * - fix for obInstitutionSbModalContent selector
  * - move all fonction and const inside institutionSelector function
- * - handle turbolinks 
+ * - handle turbolinks
  * - change labels
-*/
-
+ * - Fix ES6 syntax
+ */
 
 /**
  *
@@ -199,28 +199,26 @@ function institutionSelector(institutions, targetNode, config = {}) {
     });
   }
 
-
-
   function setOBModalStyles(config) {
     const styleConfig = config.styles;
     const institutionList = Array.from(
       document.querySelectorAll(".ob-institution > a")
     );
 
-    if (styleConfig?.modalBackgroundColor) {
+    if (styleConfig && styleConfig.modalBackgroundColor) {
       obInstitutionSbModalContent.style.backgroundColor =
         styleConfig.modalBackgroundColor;
     }
 
-    if (styleConfig?.backgroundColor) {
+    if (styleConfig && styleConfig.backgroundColor) {
       document.body.style.background = styleConfig.backgroundColor;
     }
 
-    if (styleConfig?.fontFamily) {
+    if (styleConfig && styleConfig.fontFamily) {
       includeFont(styleConfig.fontFamily);
     }
 
-    if (styleConfig?.modalTextColor) {
+    if (styleConfig && styleConfig.modalTextColor) {
       changeTextStyles(
         obStyleEnum.TextColor,
         styleConfig.modalTextColor,
@@ -228,12 +226,12 @@ function institutionSelector(institutions, targetNode, config = {}) {
       );
     }
 
-    if (styleConfig?.textColor) {
+    if (styleConfig && styleConfig.textColor) {
       const contentText = document.querySelector(".container-onboarding > p");
       contentText.style.color = styleConfig.textColor;
     }
 
-    if (styleConfig?.fontSize) {
+    if (styleConfig && styleConfig.fontSize) {
       changeTextStyles(
         obStyleEnum.FontSize,
         styleConfig.fontSize,
@@ -241,12 +239,12 @@ function institutionSelector(institutions, targetNode, config = {}) {
       );
     }
 
-    if (styleConfig?.headingColor) {
+    if (styleConfig && styleConfig.headingColor) {
       const heading = document.querySelector(".institution-modal-header h2");
       heading.style.color = styleConfig.headingColor;
     }
 
-    if (styleConfig?.linkColor) {
+    if (styleConfig && styleConfig.linkColor) {
       const arrow = document.querySelector(".institution-arrow-block > a");
       arrow.style.color = styleConfig.linkColor;
     }
@@ -259,7 +257,6 @@ function institutionSelector(institutions, targetNode, config = {}) {
     const redirect = config.redirectUrl;
     const close = _createCloseIcon();
     close.addEventListener("click", () => {
-      debugger
       window.location.href = !redirect ? document.URL : redirect;
     });
   }
@@ -297,12 +294,12 @@ function institutionSelector(institutions, targetNode, config = {}) {
   const _setOBButtonColor = (config) => {
     const btn = document.querySelector(".ob-btn-primary");
 
-    if (config?.buttonColor) {
+    if (config && config.buttonColor) {
       const color = config.buttonColor;
       btn.style.backgroundColor = color;
     }
 
-    if (config?.buttonTextColor) {
+    if (config && config.buttonTextColor) {
       btn.style.color = config.buttonTextColor;
     }
   };
