@@ -76,6 +76,7 @@ module Banking
       def attributes(item)
         {
           initiated_on: item.initiated_on,
+          transaction_number: item.transaction_number,
           name: item.name,
           memo: item.memo,
           balance: item.balance,
