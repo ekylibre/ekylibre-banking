@@ -5,7 +5,7 @@ module Banking
     def new
       cash = Cash.find_by_id(params[:cash_id])
       nordigen_service = Banking::NordigenService.instance
-      requisition_id = find_requisition_id(params[:cash_id])
+      requisition_id = find_requisition_id(cash.id)
       requisition = nordigen_service.get_requisition_by_id(requisition_id) if requisition_id
       if requisition.present? && requisition.linked?
         # requisition could be present and linked, so we keep it
@@ -14,7 +14,7 @@ module Banking
       elsif requisition.present?
         # requisition could be present but outdated, so we destroy it
         nordigen_service.delete_requisition(requisition_id)
-        Preference.find_by(name: "requisition_id_cash_id_#{cash_id}").destroy
+        Preference.find_by(name: "requisition_id_cash_id_#{cash.id}").destroy
       end
 
       if cash && (bic = cash.bank_identifier_code).present?

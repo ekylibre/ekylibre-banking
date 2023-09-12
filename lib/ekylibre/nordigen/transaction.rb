@@ -30,7 +30,7 @@ module Ekylibre
       end
 
       def transaction_number
-        transactionId.to_s + entryReference.to_s
+        entryReference.to_s
       end
 
       def transfered_on

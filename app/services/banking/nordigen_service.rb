@@ -65,11 +65,13 @@ module Banking
     # @option opts [String] :account_uuid account id
     # @return [OpenStructS] account transactions
     # transactions=>
-    #   booked=> [{:bookingDate=>"2022-01-13",
+    #   booked=> [{:entryReference="7183900022293"
+    #              :bookingDate=>"2022-01-13",
+    #              :valueDate="2023-09-06",
     #              :remittanceInformationUnstructuredArray=>["PAIEMENT CB  1101 BORDEAUX CEDE", "CCI BDX ARCACHO  CARTE 27571395"],
     #              :transactionAmount=>{:amount=>"-120.00", :currency=>"EUR"},
-    #              :transactionId=>"08001202201300001-87e1fe2a8311d43ddaab9c1fdf8714d0d7dbc1f0d683e0159f9a238d271638c3",
-    #              :valueDate=>"2022-01-13"}, {...}]
+    #              :internalTransactionId=>"08001202201300001-87e1fe2a8311d43ddaab9c1fdf8714d0d7dbc1f0d683e0159f9a238d271638c3",
+    #              }, {...}]
     #   pending=> [{...},  {...}]
     def get_account_transactions(account_uuid: )
       generate_token
