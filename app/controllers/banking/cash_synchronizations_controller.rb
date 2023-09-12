@@ -15,6 +15,9 @@ module Banking
         # requisition could be present but outdated, so we destroy it
         nordigen_service.delete_requisition(requisition_id)
         Preference.find_by(name: "requisition_id_cash_id_#{cash.id}").destroy
+      elsif requisition_id.present?
+        # requisition could return an 40X error so nil but requisition_id is still in Preferences, so we destroy it
+        Preference.find_by(name: "requisition_id_cash_id_#{cash.id}").destroy
       end
 
       if cash && (bic = cash.bank_identifier_code).present?

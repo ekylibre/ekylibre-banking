@@ -100,7 +100,11 @@ module Banking
       generate_token
 
       requisition = client.requisition.get_requisition_by_id(requisition_id)
-      Ekylibre::Nordigen::Requisition.new(requisition)
+      if requisition.status_code.present? && (%w[400 401 403 404 429].include? requisition.status_code.to_s)
+        nil
+      else
+        Ekylibre::Nordigen::Requisition.new(requisition)
+      end
     end
 
     def get_requisition_accounts(requisition_id)
